@@ -54,6 +54,34 @@ namespace nc {
 
 		glPopMatrix();
 
+		glPushMatrix();
+
+		glTranslatef(0, 0.64f, 0);
+
+		glBegin(GL_POLYGON);
+
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glVertex2f(-0.8f, -0.25f);
+
+		glColor3f(0.5f, 0.0f, 1.0f);
+		glVertex2f(-0.6f, -0.25f);
+
+		glColor3f(0.5f, 0.0f, 1.0f);
+		glVertex2f(-0.45f, 0.0f);
+
+		glColor3f(0.5f, 0.0f, 1.0f);
+		glVertex2f(-0.6f, 0.25f);
+
+		glColor3f(0.5f, 0.0f, 1.0f);
+		glVertex2f(-0.8f, 0.25f);
+
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glVertex2f(-0.95f, 0.0f);
+
+		glEnd();
+
+		glPopMatrix();
+
 		// post-render
 		renderer.EndFrame();
 	}
