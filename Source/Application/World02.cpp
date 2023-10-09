@@ -3,7 +3,8 @@
 #include "Framework/Framework.h"
 #include "Input/InputSystem.h"
 
-#define INTERLEAVE
+//#define INTERLEAVE
+#define INDEX
 
 namespace nc {
 	bool World02::Initialize() {
@@ -62,6 +63,51 @@ namespace nc {
 		glBindVertexArray(this->vao);
 
 		glBindVertexBuffer(0, vbo, 0, sizeof(GLfloat) * 6);
+
+		// Position
+		glEnableVertexAttribArray(0);
+		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, 0);
+		glVertexAttribBinding(0, 0);
+
+		// Color
+		glEnableVertexAttribArray(1);
+		glVertexAttribFormat(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3);
+		glVertexAttribBinding(1, 0);
+
+		#elif defined(INDEX)
+
+		// Vertex data
+		const float vertexData[] = {
+			-1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // top-left
+			 1.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-right
+			 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
+			-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // bottom-left
+		};
+
+		GLuint indices[] = {
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		// Vertex buffer object
+		GLuint vbo;
+		glGenBuffers(1, &vbo);
+		// Position
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+		// Index buffer object
+		GLuint ibo;
+		glGenBuffers(1, &ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		// Vertex array object
+		glGenVertexArrays(1, &(this->vao));
+		glBindVertexArray(this->vao);
+
+		glBindVertexBuffer(0, vbo, 0, sizeof(GLfloat) * 6);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 		// Position
 		glEnableVertexAttribArray(0);
@@ -146,7 +192,13 @@ namespace nc {
 
 		// render
 		glBindVertexArray(this->vao);
+
+		#ifdef INDEX
+		//glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		#else
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		#endif
 
 		// post-render
 		renderer.EndFrame();

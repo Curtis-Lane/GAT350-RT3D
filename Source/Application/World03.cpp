@@ -90,6 +90,8 @@ namespace nc {
 
 		#endif
 
+		//this->position.z = -5.0f;
+
 		return true;
 	}
 
@@ -97,10 +99,35 @@ namespace nc {
 	}
 
 	void World03::Update(float deltaTime) {
+		this->angle += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_LEFT) ? 90 * deltaTime : 0;
+		this->angle += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_RIGHT) ? 90 * -deltaTime : 0;
+
+		this->position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_A) ? this->speed * +deltaTime : 0;
+		this->position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_D) ? this->speed * -deltaTime : 0;
+		this->position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? this->speed * +deltaTime : 0;
+		this->position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
+		this->position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? this->speed * -deltaTime : 0;
+		this->position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? this->speed * +deltaTime : 0;
+
 		this->time += deltaTime;
 
-		GLint uniform = glGetUniformLocation(this->program->m_program, "time");
-		glUniform1f(uniform, this->time);
+		// Model
+		glm::mat4 position = glm::translate(glm::mat4(1), this->position);
+		glm::mat4 rotation = glm::rotate(glm::mat4(1), glm::radians(this->angle), glm::vec3(0, 0, 1));
+
+		glm::mat4 model = position * rotation;
+		GLint uniform = glGetUniformLocation(this->program->m_program, "model");
+		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(model));
+
+		// View
+		glm::mat4 view = glm::lookAt(glm::vec3(0, 4, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		uniform = glGetUniformLocation(this->program->m_program, "view");
+		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(view));
+
+		// Projection
+		glm::mat4 projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.01f, 100.0f);
+		uniform = glGetUniformLocation(this->program->m_program, "projection");
+		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(projection));
 	}
 
 	void World03::Draw(Renderer& renderer) {
