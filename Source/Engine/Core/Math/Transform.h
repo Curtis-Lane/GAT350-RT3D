@@ -1,6 +1,9 @@
 #pragma once
-#include "Vector2.h"
-#include "Matrix33.h"
+
+#include <glm/glm/gtx/euler_angles.hpp>
+#include <glm/glm/gtx/transform.hpp>
+#include <glm/glm/glm.hpp>
+
 #include "Core/Json.h"
 
 namespace nc
@@ -8,24 +11,24 @@ namespace nc
 	class Transform
 	{
 	public:
-		vec2 position;
-		float rotation = 0;
-		float scale = 1;
+		glm::vec3 position{0};
+		glm::vec3 rotation{0};
+		glm::vec3 scale{1};
 
 	public:
 		Transform() = default;
-		Transform(const vec2& position, float rotation, float scale = 1) :
+		Transform(const glm::vec3& position, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f)) :
 			position{ position },
 			rotation{ rotation },
 			scale{ scale }
 		{}
 
-		mat3 GetMatrix() const
+		glm::mat4 GetMatrix() const
 		{
-			mat3 ms = mat3::CreateScale(scale);
-			mat3 mr = mat3::CreateRotation(rotation);
-			mat3 mt = mat3::CreateTranslation(position);
-			mat3 mx = mt * ms * mr;
+			glm::mat4 ms = glm::scale(scale);
+			glm::mat4 mr = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
+			glm::mat4 mt = glm::translate(position);
+			glm::mat4 mx = mt * ms * mr;
 
 			return mx;
 		}

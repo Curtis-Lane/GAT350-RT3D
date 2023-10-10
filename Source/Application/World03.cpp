@@ -99,35 +99,42 @@ namespace nc {
 	}
 
 	void World03::Update(float deltaTime) {
-		this->angle += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_LEFT) ? 90 * deltaTime : 0;
-		this->angle += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_RIGHT) ? 90 * -deltaTime : 0;
+		ENGINE.GetSystem<Gui>()->BeginFrame();
 
-		this->position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_A) ? this->speed * +deltaTime : 0;
-		this->position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_D) ? this->speed * -deltaTime : 0;
-		this->position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? this->speed * +deltaTime : 0;
-		this->position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
-		this->position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? this->speed * -deltaTime : 0;
-		this->position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? this->speed * +deltaTime : 0;
+		ImGui::Begin("Transform");
+		ImGui::DragFloat3("Position", &this->transform.position[0]);
+		ImGui::DragFloat3("Rotation", &this->transform.rotation[0]);
+		ImGui::DragFloat3("Scale", &this->transform.scale[0]);
+		ImGui::End();
 
-		this->time += deltaTime;
+		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
+		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? 90 * deltaTime : 0;
+		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEUP) ? 90 * deltaTime : 0;
+		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEDOWN) ? 90 * -deltaTime : 0;
+		this->transform.rotation.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_LEFT) ? 90 * deltaTime : 0;
+		this->transform.rotation.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_RIGHT) ? 90 * -deltaTime : 0;
+
+		this->transform.position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_A) ? this->speed * +deltaTime : 0;
+		this->transform.position.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_D) ? this->speed * -deltaTime : 0;
+		this->transform.position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_E) ? this->speed * -deltaTime : 0;
+		this->transform.position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_Q) ? this->speed * +deltaTime : 0;
+		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? this->speed * +deltaTime : 0;
+		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
+
+		//this->time += deltaTime;
 
 		// Model
-		glm::mat4 position = glm::translate(glm::mat4(1), this->position);
-		glm::mat4 rotation = glm::rotate(glm::mat4(1), glm::radians(this->angle), glm::vec3(0, 0, 1));
-
-		glm::mat4 model = position * rotation;
-		GLint uniform = glGetUniformLocation(this->program->m_program, "model");
-		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(model));
+		this->program->SetUniform("model", this->transform.GetMatrix());
 
 		// View
 		glm::mat4 view = glm::lookAt(glm::vec3(0, 4, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		uniform = glGetUniformLocation(this->program->m_program, "view");
-		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(view));
+		this->program->SetUniform("view", view);
 
 		// Projection
 		glm::mat4 projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.01f, 100.0f);
-		uniform = glGetUniformLocation(this->program->m_program, "projection");
-		glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(projection));
+		this->program->SetUniform("projection", projection);
+
+		ENGINE.GetSystem<Gui>()->EndFrame();
 	}
 
 	void World03::Draw(Renderer& renderer) {
@@ -137,6 +144,8 @@ namespace nc {
 		// render
 		glBindVertexArray(this->vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		ENGINE.GetSystem<Gui>()->Draw();
 
 		// post-render
 		renderer.EndFrame();
