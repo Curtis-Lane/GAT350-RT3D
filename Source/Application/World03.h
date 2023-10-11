@@ -12,12 +12,16 @@ namespace nc {
 			void Draw(Renderer& renderer) override;
 
 		private:
-			//float time = 0.0f;
+			float time = 0.0f;
 			float speed = 5.0f;
+
+			glm::vec2 texOffset = glm::vec2(0);
+			float texTiling = 1.0f;
 
 			Transform transform;
 
 			GLuint vao = 0;
 			res_t<Program> program;
+			res_t<Texture> texture;
 	};
 }

@@ -1,25 +1,29 @@
 #pragma once
+
+#include <glad/include/glad/glad.h>
+#include <glm/glm/glm.hpp>
+
 #include "Framework/Resource/Resource.h"
-#include "Core/Math/Vector2.h"
 
-struct SDL_Texture;
+namespace nc {
+	class Texture : public Resource {
+		public:
+			Texture() = default;
+			~Texture();
 
-namespace nc
-{
-	class Texture : public Resource
-	{
-	public:
-		Texture() = default;
-		~Texture();
+			virtual bool Create(std::string filename, ...) override;
 
-		virtual bool Create(std::string filename, ...) override;
+			bool Load(const std::string& filename, class Renderer& renderer);
+			const glm::ivec2& GetSize() const {return this->size;}
 
-		bool Load(const std::string& filename, class Renderer& renderer);
-		vec2 GetSize();
+			void SetActive(GLuint unit) {glActiveTexture(unit);}
+			void Bind() {glBindTexture(this->target, this->texture);}
 
-		friend class Renderer;
+			friend class Renderer;
 
-	private:
-		SDL_Texture* m_texture = nullptr;
+		private:
+			GLuint texture = NULL;
+			GLenum target = GL_TEXTURE_2D;
+			glm::ivec2 size = glm::ivec2(0);
 	};
 }

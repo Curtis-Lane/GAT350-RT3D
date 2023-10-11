@@ -3,24 +3,25 @@
 #include "Framework/Framework.h"
 #include "Input/InputSystem.h"
 
-#define INTERLEAVE
-
 namespace nc {
 	bool World03::Initialize() {
 		// Shaders
-		this->program = GET_RESOURCE(Program, "Shaders/unlit_color.prog");
+		this->program = GET_RESOURCE(Program, "Shaders/unlit_texture.prog");
 		this->program->Use();
 
-		#ifdef INTERLEAVE
+		this->texture = GET_RESOURCE(Texture, "Textures/llama.jpg");
+		this->texture->Bind();
+		this->texture->SetActive(GL_TEXTURE0);
 		
 		// Vertex data
 		float vertexData[] = {
-			-0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f,
-			-0.8f,  0.8f, 0.0f, 0.0f, 1.0f, 1.0f,
-			-0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f
+			//    Position            Color           UV
+			-0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+			-0.8f,  0.8f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+			-0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+			 0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
 
 		GLuint vbo;
@@ -32,7 +33,7 @@ namespace nc {
 		glGenVertexArrays(1, &(this->vao));
 		glBindVertexArray(this->vao);
 
-		glBindVertexBuffer(0, vbo, 0, sizeof(GLfloat) * 6);
+		glBindVertexBuffer(0, vbo, 0, sizeof(GLfloat) * 8);
 
 		// Position
 		glEnableVertexAttribArray(0);
@@ -44,53 +45,10 @@ namespace nc {
 		glVertexAttribFormat(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3);
 		glVertexAttribBinding(1, 0);
 
-		#else
-
-		// Vertex data
-		float positionData[] = {
-			-0.8f, -0.8f, 0.0f,
-			 0.8f,  0.8f, 0.0f,
-			-0.8f,  0.8f, 0.0f,
-			-0.8f, -0.8f, 0.0f,
-			 0.8f, -0.8f, 0.0f,
-			 0.8f,  0.8f, 0.0f
-		};
-
-		float colorData[] =	{
-			1.0f, 0.0f, 1.0f,
-			1.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 0.0f
-		};
-
-		GLuint vbo[2];
-		glGenBuffers(2, vbo);
-		// Position
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(positionData), positionData, GL_STATIC_DRAW);
-
-		// Color
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
-
-		glGenVertexArrays(1, &(this->vao));
-		glBindVertexArray(this->vao);
-
-		// Position
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glBindVertexBuffer(0, vbo[0], 0, sizeof(GLfloat) * 3);
-
-		// Color
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glBindVertexBuffer(1, vbo[1], 0, sizeof(GLfloat) * 3);
-
-		#endif
-
-		//this->position.z = -5.0f;
+		// UV
+		glEnableVertexAttribArray(2);
+		glVertexAttribFormat(2, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6);
+		glVertexAttribBinding(2, 0);
 
 		return true;
 	}
@@ -107,6 +65,12 @@ namespace nc {
 		ImGui::DragFloat3("Scale", &this->transform.scale[0]);
 		ImGui::End();
 
+		ImGui::Begin("Texture");
+		ImGui::DragFloat("Offset X", &this->texOffset[0]);
+		ImGui::DragFloat("Offset Y", &this->texOffset[1]);
+		ImGui::DragFloat("Tiling", &this->texTiling);
+		ImGui::End();
+
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? 90 * deltaTime : 0;
 		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEUP) ? 90 * deltaTime : 0;
@@ -121,13 +85,19 @@ namespace nc {
 		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? this->speed * +deltaTime : 0;
 		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
 
-		//this->time += deltaTime;
+		this->time += deltaTime;
+		
+		// UV Offset
+		this->program->SetUniform("offset", this->texOffset);
+
+		// Tiling
+		this->program->SetUniform("tiling", glm::vec2(this->texTiling));
 
 		// Model
 		this->program->SetUniform("model", this->transform.GetMatrix());
 
 		// View
-		glm::mat4 view = glm::lookAt(glm::vec3(0, 4, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 		this->program->SetUniform("view", view);
 
 		// Projection
