@@ -24,31 +24,11 @@ namespace nc {
 			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
 
-		GLuint vbo;
-		glGenBuffers(1, &vbo);
-		// Position
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-
-		glGenVertexArrays(1, &(this->vao));
-		glBindVertexArray(this->vao);
-
-		glBindVertexBuffer(0, vbo, 0, sizeof(GLfloat) * 8);
-
-		// Position
-		glEnableVertexAttribArray(0);
-		glVertexAttribFormat(0, 3, GL_FLOAT, GL_FALSE, 0);
-		glVertexAttribBinding(0, 0);
-
-		// Color
-		glEnableVertexAttribArray(1);
-		glVertexAttribFormat(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3);
-		glVertexAttribBinding(1, 0);
-
-		// UV
-		glEnableVertexAttribArray(2);
-		glVertexAttribFormat(2, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6);
-		glVertexAttribBinding(2, 0);
+		this->vertexBuffer = GET_RESOURCE(VertexBuffer, "vb");
+		this->vertexBuffer->CreateVertexBuffer(sizeof(vertexData), 6, vertexData);
+		this->vertexBuffer->SetAttribute(0, 3, sizeof(GLfloat) * 8, 0);                   // position
+		this->vertexBuffer->SetAttribute(1, 3, sizeof(GLfloat) * 8, sizeof(GLfloat) * 3); // color
+		this->vertexBuffer->SetAttribute(2, 2, sizeof(GLfloat) * 8, sizeof(GLfloat) * 6); // uv
 
 		return true;
 	}
@@ -85,7 +65,7 @@ namespace nc {
 		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? this->speed * +deltaTime : 0;
 		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
 
-		this->time += deltaTime;
+		//this->time += deltaTime;
 		
 		// UV Offset
 		this->program->SetUniform("offset", this->texOffset);
@@ -112,8 +92,7 @@ namespace nc {
 		renderer.BeginFrame();
 
 		// render
-		glBindVertexArray(this->vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		this->vertexBuffer->Draw(GL_TRIANGLES);
 
 		ENGINE.GetSystem<Gui>()->Draw();
 

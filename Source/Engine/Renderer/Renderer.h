@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "Model.h"
 #include "Texture.h"
+#include "VertexBuffer.h"
 #include "Shader.h"
 #include "Program.h"
 #include "Gui.h"
