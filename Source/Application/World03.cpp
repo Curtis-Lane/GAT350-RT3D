@@ -5,13 +5,7 @@
 
 namespace nc {
 	bool World03::Initialize() {
-		// Shaders
-		this->program = GET_RESOURCE(Program, "Shaders/unlit_texture.prog");
-		this->program->Use();
-
-		this->texture = GET_RESOURCE(Texture, "Textures/llama.jpg");
-		this->texture->Bind();
-		this->texture->SetActive(GL_TEXTURE0);
+		this->material = GET_RESOURCE(Material, "Materials/quad.mtrl");
 		
 		// Vertex data
 		float vertexData[] = {
@@ -45,11 +39,11 @@ namespace nc {
 		ImGui::DragFloat3("Scale", &this->transform.scale[0]);
 		ImGui::End();
 
-		ImGui::Begin("Texture");
-		ImGui::DragFloat("Offset X", &this->texOffset[0]);
-		ImGui::DragFloat("Offset Y", &this->texOffset[1]);
-		ImGui::DragFloat("Tiling", &this->texTiling);
-		ImGui::End();
+		//ImGui::Begin("Texture");
+		//ImGui::DragFloat("Offset X", &this->texOffset[0]);
+		//ImGui::DragFloat("Offset Y", &this->texOffset[1]);
+		//ImGui::DragFloat("Tiling", &this->texTiling);
+		//ImGui::End();
 
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? 90 * deltaTime : 0;
@@ -66,23 +60,26 @@ namespace nc {
 		this->transform.position.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? this->speed * -deltaTime : 0;
 
 		//this->time += deltaTime;
+
+		this->material->ProcessGUI();
+		this->material->Bind();
 		
 		// UV Offset
-		this->program->SetUniform("offset", this->texOffset);
+		//this->program->SetUniform("offset", this->texOffset);
 
 		// Tiling
-		this->program->SetUniform("tiling", glm::vec2(this->texTiling));
+		//this->program->SetUniform("tiling", glm::vec2(this->texTiling));
 
 		// Model
-		this->program->SetUniform("model", this->transform.GetMatrix());
+		this->material->GetProgram()->SetUniform("model", this->transform.GetMatrix());
 
 		// View
 		glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		this->program->SetUniform("view", view);
+		this->material->GetProgram()->SetUniform("view", view);
 
 		// Projection
 		glm::mat4 projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.01f, 100.0f);
-		this->program->SetUniform("projection", projection);
+		this->material->GetProgram()->SetUniform("projection", projection);
 
 		ENGINE.GetSystem<Gui>()->EndFrame();
 	}

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Framework/System.h"
 #include "Font.h"
 #include "Model.h"
@@ -6,6 +7,7 @@
 #include "VertexBuffer.h"
 #include "Shader.h"
 #include "Program.h"
+#include "Material.h"
 #include "Gui.h"
 
 #include <glad/include/glad/glad.h>

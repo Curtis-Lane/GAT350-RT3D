@@ -45,6 +45,12 @@ namespace nc {
 		glTexStorage2D(this->target, 1, internalFormat, this->size.x, this->size.y);
 		glTexSubImage2D(this->target, NULL, 0, 0, this->size.x, this->size.y, format, GL_UNSIGNED_BYTE, data);
 
+		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexParameteri(this->target, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(this->target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 		stbi_image_free(data);
 
 		return true;
