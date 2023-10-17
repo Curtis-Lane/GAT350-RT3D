@@ -22,9 +22,9 @@ namespace nc {
 			void ProcessGUI();
 
 		public:
-			glm::vec4 color;
-			glm::vec2 tiling;
-			glm::vec2 offset;
+			glm::vec4 color = glm::vec4(1);
+			glm::vec2 tiling = glm::vec2(1);
+			glm::vec2 offset = glm::vec2(0);
 
 		private:
 			res_t<Program> program;

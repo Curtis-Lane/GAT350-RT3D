@@ -18,7 +18,7 @@ namespace nc {
 			 0.8f,  0.8f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
 
-		this->vertexBuffer = GET_RESOURCE(VertexBuffer, "vb");
+		this->vertexBuffer = std::make_shared<VertexBuffer>();
 		this->vertexBuffer->CreateVertexBuffer(sizeof(vertexData), 6, vertexData);
 		this->vertexBuffer->SetAttribute(0, 3, sizeof(GLfloat) * 8, 0);                   // position
 		this->vertexBuffer->SetAttribute(1, 3, sizeof(GLfloat) * 8, sizeof(GLfloat) * 3); // color

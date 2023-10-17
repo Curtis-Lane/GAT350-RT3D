@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "Renderer.h"
+#include <glad/include/glad/glad.h>
 
 namespace nc {
 	class VertexBuffer : public Resource {

@@ -1,30 +1,39 @@
 #pragma once
-#include "Core/Core.h"
+
 #include "Framework/Resource/Resource.h"
-#include <vector>
 
-namespace nc
-{
-	class Renderer;
+#include "VertexBuffer.h"
+#include "Material.h"
 
-	class Model : public Resource
-	{
-	public:
-		Model() = default;
-		Model(const std::vector<vec2>& points) : m_points{ points } {}
+struct aiNode;
+struct aiMesh;
+struct aiScene;
 
-		virtual bool Create(std::string filename, ...) override;
-		bool Load(const std::string& filename);
+namespace nc {
+	class Model : public Resource {
+		public:
+			// vertex attributes
+			struct vertex_t {
+				glm::vec3 position;
+				glm::vec2 texcoord;
+				glm::vec3 normal;
+				glm::vec3 tangent;
+			};
 
-		void Draw(Renderer& renderer, const vec2& position, float rotation, float scale);
-		void Draw(Renderer& renderer, const Transform& transform);
+		public:
+			bool Create(std::string filename, ...) override;
+			bool Load(const std::string& filename);
+			void Draw(GLenum primitive = GL_TRIANGLES);
 
-		float GetRadius();
+			void SetMaterial(res_t<Material> material) {this->material = material;}
+			res_t<Material> GetMaterial() {return this->material;}
 
-	private:
-		std::vector<vec2> m_points;
-		Color m_color;
-		float m_radius = 0;
+		private:
+			void ProcessNode(aiNode* node, const aiScene* scene);
+			void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
+		private:
+			res_t<VertexBuffer> vertexBuffer;
+			res_t<Material> material;
 	};
 }
