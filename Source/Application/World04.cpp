@@ -5,10 +5,10 @@
 
 namespace nc {
 	bool World04::Initialize() {
-		auto material = GET_RESOURCE(Material, "Materials/squirrel.mtrl");
+		auto material = GET_RESOURCE(Material, "Materials/grid.mtrl");
 		this->model = std::make_shared<Model>();
 		this->model->SetMaterial(material);
-		this->model->Load("Models/squirrel.glb");
+		this->model->Load("Models/sphere.obj");
 
 		return true;
 	}
@@ -20,9 +20,9 @@ namespace nc {
 		ENGINE.GetSystem<Gui>()->BeginFrame();
 
 		ImGui::Begin("Transform");
-		ImGui::DragFloat3("Position", &this->transform.position[0]);
+		ImGui::DragFloat3("Position", &this->transform.position[0], 0.1f);
 		ImGui::DragFloat3("Rotation", &this->transform.rotation[0]);
-		ImGui::DragFloat3("Scale", &this->transform.scale[0]);
+		ImGui::DragFloat3("Scale", &this->transform.scale[0], 0.1f);
 		ImGui::End();
 
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
@@ -45,6 +45,17 @@ namespace nc {
 		material->ProcessGUI();
 		material->Bind();
 
+		ImGui::Begin("Light");
+		ImGui::ColorEdit3("Ambient Light Color", glm::value_ptr(this->ambientLightColor));
+		ImGui::ColorEdit3("Diffuse Light Color", glm::value_ptr(this->diffuseLightColor));
+		ImGui::DragFloat3("Diffuse Light Position", glm::value_ptr(this->diffuseLightPosition), 0.25f);
+		ImGui::End();
+
+		// Lights
+		material->GetProgram()->SetUniform("ambientLight", this->ambientLightColor);
+		material->GetProgram()->SetUniform("light.color", this->diffuseLightColor);
+		material->GetProgram()->SetUniform("light.position", this->diffuseLightPosition);
+
 		// Model
 		material->GetProgram()->SetUniform("model", this->transform.GetMatrix());
 
@@ -64,6 +75,7 @@ namespace nc {
 		renderer.BeginFrame();
 
 		// render
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		this->model->Draw(GL_TRIANGLES);
 
 		ENGINE.GetSystem<Gui>()->Draw();

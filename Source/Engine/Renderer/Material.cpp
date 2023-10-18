@@ -37,9 +37,9 @@ namespace nc {
 
 	void Material::Bind() {
 		this->program->Use();
-		this->program->SetUniform("color", this->color);
-		this->program->SetUniform("tiling", this->tiling);
-		this->program->SetUniform("offset", this->offset);
+		this->program->SetUniform("material.color", this->color);
+		this->program->SetUniform("material.tiling", this->tiling);
+		this->program->SetUniform("material.offset", this->offset);
 
 		for(size_t i = 0; i < this->textures.size(); i++) {
 			this->textures[i]->SetActive(GL_TEXTURE0 + (int) i);
