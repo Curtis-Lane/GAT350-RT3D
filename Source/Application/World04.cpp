@@ -8,7 +8,7 @@ namespace nc {
 		auto material = GET_RESOURCE(Material, "Materials/grid.mtrl");
 		this->model = std::make_shared<Model>();
 		this->model->SetMaterial(material);
-		this->model->Load("Models/sphere.obj");
+		this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
 
 		return true;
 	}
@@ -27,8 +27,8 @@ namespace nc {
 
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? 90 * deltaTime : 0;
-		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEUP) ? 90 * deltaTime : 0;
-		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEDOWN) ? 90 * -deltaTime : 0;
+		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEUP) ? 90 * -deltaTime : 0;
+		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEDOWN) ? 90 * deltaTime : 0;
 		this->transform.rotation.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_LEFT) ? 90 * deltaTime : 0;
 		this->transform.rotation.z += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_RIGHT) ? 90 * -deltaTime : 0;
 
@@ -64,7 +64,7 @@ namespace nc {
 		material->GetProgram()->SetUniform("view", view);
 
 		// Projection
-		glm::mat4 projection = glm::perspective(glm::radians(70.0f), 800.0f / 600.0f, 0.01f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(ENGINE.GetSystem<Renderer>()->GetWidth()) / ENGINE.GetSystem<Renderer>()->GetHeight(), 0.01f, 100.0f);
 		material->GetProgram()->SetUniform("projection", projection);
 
 		ENGINE.GetSystem<Gui>()->EndFrame();

@@ -1,8 +1,9 @@
 #version 430
 
-in layout(location = 0) vec2 texcoord;
+in layout(location = 0) vec3 position;
 in layout(location = 1) vec3 normal;
-in layout(location = 2) vec4 color;
+in layout(location = 2) vec2 texcoord;
+in layout(location = 3) vec4 color;
 
 out layout(location = 0) vec4 ocolor;
 

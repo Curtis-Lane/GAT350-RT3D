@@ -28,7 +28,9 @@ namespace nc {
 			this->textures.push_back(GET_RESOURCE(Texture, texture));
 		}
 
-		READ_DATA(document, color);
+		READ_DATA(document, diffuse);
+		READ_DATA(document, specular);
+		READ_DATA(document, shininess);
 		READ_DATA(document, tiling);
 		READ_DATA(document, offset);
 
@@ -37,7 +39,10 @@ namespace nc {
 
 	void Material::Bind() {
 		this->program->Use();
-		this->program->SetUniform("material.color", this->color);
+		this->program->SetUniform("material.diffuse", this->diffuse);
+		this->program->SetUniform("material.specular", this->specular);
+		this->program->SetUniform("material.shininess", this->shininess);
+
 		this->program->SetUniform("material.tiling", this->tiling);
 		this->program->SetUniform("material.offset", this->offset);
 
@@ -49,7 +54,9 @@ namespace nc {
 
 	void Material::ProcessGUI() {
 		ImGui::Begin("Material");
-		ImGui::ColorEdit4("Color", glm::value_ptr(this->color));
+		ImGui::ColorEdit3("Diffuse", glm::value_ptr(this->diffuse));
+		ImGui::ColorEdit3("Specular", glm::value_ptr(this->specular));
+		ImGui::DragFloat("Shininess", &this->shininess, 0.1f, 2.0f, 216.0f);
 		ImGui::DragFloat2("Tiling", glm::value_ptr(this->tiling), 0.1f);
 		ImGui::DragFloat2("Offset", glm::value_ptr(this->offset), 0.01f);
 		ImGui::End();
