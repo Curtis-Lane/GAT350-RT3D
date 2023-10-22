@@ -15,7 +15,7 @@ namespace nc {
 
 		private:
 			//float time = 0.0f;
-			float speed = 1.5f;
+			float speed = 0.5f;
 
 			glm::vec3 ambientLightColor = glm::vec3(0.2f);
 			glm::vec3 diffuseLightColor = glm::vec3(1);

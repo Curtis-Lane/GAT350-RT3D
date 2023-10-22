@@ -8,7 +8,8 @@ namespace nc {
 		auto material = GET_RESOURCE(Material, "Materials/grid.mtrl");
 		this->model = std::make_shared<Model>();
 		this->model->SetMaterial(material);
-		this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
+		this->model->Load("Models/sphere.obj");
+		//this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
 
 		return true;
 	}
