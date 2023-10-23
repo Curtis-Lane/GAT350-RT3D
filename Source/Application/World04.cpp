@@ -8,8 +8,16 @@ namespace nc {
 		auto material = GET_RESOURCE(Material, "Materials/grid.mtrl");
 		this->model = std::make_shared<Model>();
 		this->model->SetMaterial(material);
-		this->model->Load("Models/sphere.obj");
+		this->model->Load("Models/plane.obj", glm::vec3(0, -1, 0));
+		//this->model->Load("Models/plane.obj", glm::vec3(0), glm::vec3(90, 0, 0));
 		//this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
+		//this->model->Load("Models/dragon.obj");
+
+		this->light.type = light_t::lightType::Point;
+		this->light.position = glm::vec3(0, 5, 0);
+		this->light.direction = glm::vec3(0, -1, 0);
+		this->light.color = glm::vec3(1);
+		this->light.cutoff = 30.0f;
 
 		return true;
 	}
@@ -47,15 +55,34 @@ namespace nc {
 		material->Bind();
 
 		ImGui::Begin("Light");
+		const char* types[] = {"Point", "Directional", "Spot"};
+		ImGui::Combo("Type", (int*) &(this->light.type), types, 3);
+
 		ImGui::ColorEdit3("Ambient Light Color", glm::value_ptr(this->ambientLightColor));
-		ImGui::ColorEdit3("Diffuse Light Color", glm::value_ptr(this->diffuseLightColor));
-		ImGui::DragFloat3("Diffuse Light Position", glm::value_ptr(this->diffuseLightPosition), 0.25f);
+
+		ImGui::ColorEdit3("Diffuse Light Color", glm::value_ptr(this->light.color));
+
+		if(this->light.type != light_t::lightType::Point) {
+			ImGui::DragFloat3("Diffuse Light Direction", glm::value_ptr(this->light.direction));
+		}
+
+		if(this->light.type != light_t::lightType::Directional) {
+			ImGui::DragFloat3("Diffuse Light Position", glm::value_ptr(this->light.position), 0.25f);
+		}
+
+		if(this->light.type == light_t::lightType::Spot) {
+			ImGui::DragFloat("Cutoff", &(this->light.cutoff), 1, 0, 90);
+		}
+
 		ImGui::End();
 
 		// Lights
 		material->GetProgram()->SetUniform("ambientLight", this->ambientLightColor);
-		material->GetProgram()->SetUniform("light.color", this->diffuseLightColor);
-		material->GetProgram()->SetUniform("light.position", this->diffuseLightPosition);
+		material->GetProgram()->SetUniform("light.color", this->light.color);
+		material->GetProgram()->SetUniform("light.position", this->light.position);
+		material->GetProgram()->SetUniform("light.direction", this->light.direction);
+		material->GetProgram()->SetUniform("light.type", this->light.type);
+		material->GetProgram()->SetUniform("light.cutoff", glm::radians(this->light.cutoff));
 
 		// Model
 		material->GetProgram()->SetUniform("model", this->transform.GetMatrix());

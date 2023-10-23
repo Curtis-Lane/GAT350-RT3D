@@ -6,6 +6,20 @@
 #include "Core/Math/Transform.h"
 
 namespace nc {
+	struct light_t {
+		enum lightType {
+			Point,
+			Directional,
+			Spot
+		};
+
+		lightType type;
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 color;
+		float cutoff;
+	};
+
 	class World04 : public World {
 		public:
 			bool Initialize() override;
@@ -15,11 +29,10 @@ namespace nc {
 
 		private:
 			//float time = 0.0f;
-			float speed = 0.5f;
+			float speed = 1.0f;
 
+			light_t light;
 			glm::vec3 ambientLightColor = glm::vec3(0.2f);
-			glm::vec3 diffuseLightColor = glm::vec3(1);
-			glm::vec3 diffuseLightPosition = glm::vec3(0, 8, 0);
 
 			Transform transform;
 
