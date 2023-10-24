@@ -17,7 +17,10 @@ namespace nc {
 		glm::vec3 position;
 		glm::vec3 direction;
 		glm::vec3 color;
-		float cutoff;
+		float intensity;
+		float range;
+		float innerAngle;
+		float outerAngle;
 	};
 
 	class World04 : public World {
@@ -28,10 +31,10 @@ namespace nc {
 			void Draw(Renderer& renderer) override;
 
 		private:
-			//float time = 0.0f;
 			float speed = 1.0f;
 
-			light_t light;
+			light_t lights[3];
+			int lightSelected = 0;
 			glm::vec3 ambientLightColor = glm::vec3(0.2f);
 
 			Transform transform;

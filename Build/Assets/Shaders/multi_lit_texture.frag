@@ -30,10 +30,42 @@ uniform struct Light {
 	float range;
 	float innerAngle;
 	float outerAngle;
-} light;
+} lights[3];
 
 uniform vec3 ambientLight;
+uniform int numLights = 3;
 
+void phong(in Light light, in vec3 position, in vec3 normal, out vec3 diffuse, out vec3 specular) {
+	// Diffuse light calculations
+	vec3 lightDir = vec3(0);
+	if(light.type == DIRECTIONAL) {
+		lightDir = normalize(-light.direction);
+	} else {
+		lightDir = normalize(light.position - position);
+	}
+
+	float spotIntensity = 1;
+	if(light.type == SPOT) {
+		float angle = acos(dot(light.direction, -lightDir));
+		spotIntensity = smoothstep(light.outerAngle + 0.001, light.innerAngle, angle);
+	}
+
+	float intensity = max(dot(lightDir, normal), 0) * spotIntensity;
+	diffuse = material.diffuse * (light.color * intensity);
+
+	// Specular light calculations
+	specular = vec3(0);
+	// Skip calculations if no light is present
+	if(intensity > 0) {
+		vec3 reflection = reflect(-lightDir, normal);
+		vec3 viewDir = normalize(-position);
+		intensity = max(dot(reflection, viewDir), 0);
+		intensity = pow(intensity, material.shininess);
+		specular = material.specular * intensity * spotIntensity;
+	}
+}
+
+/*
 vec3 ads(in vec3 position, in vec3 normal) {
 	// Cache the ambient light
 	vec3 ambient = ambientLight;
@@ -78,11 +110,20 @@ vec3 ads(in vec3 position, in vec3 normal) {
 	// Merge the lights together
 	return ambient + (diffuse + specular) * light.intensity * attenuation;
 }
+*/
 
 void main()
 {
 	// Get color from texture
 	vec4 texcolor = texture(tex, texcoord);
 	// Multiply texture color by lighting
-	ocolor = texcolor * vec4(ads(position, normal), 1);
+	ocolor = vec4(ambientLight, 1);
+
+	for(int i = 0; i < numLights; i++) {
+		vec3 diffuse;
+		vec3 specular;
+
+		phong(lights[i], position, normal, diffuse, specular);
+		ocolor += (vec4(diffuse, 1) * texcolor) + vec4(specular, 1);
+	}
 }
