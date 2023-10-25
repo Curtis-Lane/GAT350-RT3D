@@ -38,6 +38,8 @@ namespace nc
 		virtual void OnCollisionEnter(Actor* other) {}
 		virtual void OnCollisionExit(Actor* other) {}
 
+		virtual void ProcessGUI() override;
+
 		class Scene* m_scene = nullptr;
 		friend class Scene;
 

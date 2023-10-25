@@ -7,13 +7,13 @@
 
 namespace nc {
 	bool World04::Initialize() {
-		auto material = GET_RESOURCE(Material, "Materials/multi.mtrl");
+		auto material = GET_RESOURCE(Material, "Materials/squirrel.mtrl");
 		this->model = std::make_shared<Model>();
 		this->model->SetMaterial(material);
 		//this->model->Load("Models/plane.obj", glm::vec3(0, -1, 0));
 		//this->model->Load("Models/plane.obj", glm::vec3(0), glm::vec3(90, 0, 0));
-		this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
-		//this->model->Load("Models/dragon.obj");
+		//this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
+		this->model->Load("Models/squirrel.glb", glm::vec3(0, -0.7f, 0), glm::vec3(0), glm::vec3(0.4f));
 
 		for(int i = 0; i < 3; i++) {
 			this->lights[i].type = light_t::lightType::Point;
@@ -35,12 +35,6 @@ namespace nc {
 	void World04::Update(float deltaTime) {
 		ENGINE.GetSystem<Gui>()->BeginFrame();
 
-		ImGui::Begin("Transform");
-		ImGui::DragFloat3("Position", &this->transform.position[0], 0.1f);
-		ImGui::DragFloat3("Rotation", &this->transform.rotation[0]);
-		ImGui::DragFloat3("Scale", &this->transform.scale[0], 0.1f);
-		ImGui::End();
-
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_UP) ? 90 * -deltaTime : 0;
 		this->transform.rotation.x += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_DOWN) ? 90 * deltaTime : 0;
 		this->transform.rotation.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_PAGEUP) ? 90 * -deltaTime : 0;
@@ -61,11 +55,24 @@ namespace nc {
 		material->ProcessGUI();
 		material->Bind();
 
+		ImGui::Begin("Scene");
+		ImGui::ColorEdit3("Ambient Color", glm::value_ptr(this->ambientLightColor));
+		ImGui::Separator();
+
+		for(int i = 0; i < 3; i++) {
+			std::string name = "Light " + std::to_string(i + 1);
+			if(ImGui::Selectable(name.c_str(), this->lightSelected == i)) {
+				this->lightSelected = i;
+			}
+		}
+
+		ImGui::End();
+
 		ImGui::Begin("Light");
 		const char* types[] = {"Point", "Directional", "Spot"};
 		ImGui::Combo("Type", (int*) &(this->lights[this->lightSelected].type), types, 3);
 
-		ImGui::ColorEdit3("Ambient Light Color", glm::value_ptr(this->ambientLightColor));
+		//ImGui::ColorEdit3("Ambient Light Color", glm::value_ptr(this->ambientLightColor));
 
 		ImGui::ColorEdit3("Diffuse Light Color", glm::value_ptr(this->lights[this->lightSelected].color));
 

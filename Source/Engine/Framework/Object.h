@@ -28,17 +28,17 @@ namespace nc
 	public:
 		Object() = default;
 		Object(const std::string& name) : name{ name } {}
-		virtual ~Object() { 
-			OnDestroy(); 
-		}
+		virtual ~Object() {OnDestroy();}
 
 		CLASS_DECLARATION(Object)
 
 		virtual bool Initialize() { return true; }
 		virtual void OnDestroy() {}
+		virtual void ProcessGUI() {}
 
 	public:
 		std::string name;
 		bool active = true;
+		bool guiSelect = false;
 	};
 }
