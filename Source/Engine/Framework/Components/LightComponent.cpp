@@ -33,12 +33,27 @@ namespace nc {
 
 		ImGui::ColorEdit3("Color", glm::value_ptr(color));
 		ImGui::DragFloat("Intensity", &intensity, 0.1f, 0, 10);
-		if(type != Directional) ImGui::DragFloat("Range", &range, 0.1f, 0.1f, 50);
-
-
+		if(type != Directional) {
+			ImGui::DragFloat("Range", &range, 0.1f, 0.1f, 50);
+		}
 	}
 
 	void LightComponent::Read(const nc::json_t& value) {
-		// read json file
+		std::string lightType = "";
+		READ_DATA(value, lightType);
+		// I wanted to use a dang switch here but apparently c++ doesn't allow strings in switch statements
+		if(lightType == "Point") {
+			this->type = lightType::Point;
+		} else if(lightType == "Directional") {
+			this->type = lightType::Directional;
+		} else if(lightType == "Spot") {
+			this->type = lightType::Spot;
+		}
+
+		READ_DATA(value, color);
+		READ_DATA(value, intensity);
+		READ_DATA(value, range);
+		READ_DATA(value, innerAngle);
+		READ_DATA(value, outerAngle);
 	}
 }

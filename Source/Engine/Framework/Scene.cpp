@@ -1,5 +1,6 @@
 #include "Scene.h"
-#include "Framework/Components/CollisionComponent.h"
+
+#include "Framework/Components/LightComponent.h"
 
 namespace nc
 {
@@ -21,11 +22,41 @@ namespace nc
 		}
 	}
 
-	void Scene::Draw(Renderer& renderer)
-	{
-		for (auto& actor : m_actors)
-		{
-			if (actor->active) actor->Draw(renderer);
+	void Scene::Draw(Renderer& renderer) {
+		// get light components
+		std::vector<LightComponent*> lights;
+		for(auto& actor : m_actors) {
+			if(!actor->active) continue;
+
+			auto component = actor->GetComponent<LightComponent>();
+			if(component != nullptr) {
+				lights.push_back(component);
+			}
+		}
+
+		// get all shader programs in the resource system
+		auto programs = ResourceManager::Instance().GetAllOfType<Program>();
+		// set all shader programs camera and lights uniforms
+		for(auto& program : programs) {
+			program->Use();
+
+			// set camera in shader program
+			//if(camera) camera->SetProgram(program);
+
+			// set lights in shader program
+			int index = 0;
+			for(auto light : lights) {
+				std::string name = "lights[" + std::to_string(index++) + "]";
+
+				light->SetProgram(program, name);
+			}
+
+			program->SetUniform("numLights", index);
+			program->SetUniform("ambientLight", ambientColor);
+		}
+
+		for(auto& actor : m_actors) {
+			if(actor->active) actor->Draw(renderer);
 		}
 	}
 
@@ -85,4 +116,26 @@ namespace nc
 
 	}
 
+	void Scene::ProcessGUI() {
+		ImGui::Begin("Scene");
+		ImGui::ColorEdit3("Ambient", glm::value_ptr(ambientColor));
+		ImGui::Separator();
+
+		for(auto& actor : m_actors) {
+			if(ImGui::Selectable(actor->name.c_str(), actor->guiSelect)) {
+				// Set all actors GUI to false
+				std::for_each(m_actors.begin(), m_actors.end(), [](auto& a) { a->guiSelect = false; });
+				// Set selected actor GUI to true
+				actor->guiSelect = true;
+			}
+		}
+		ImGui::End();
+
+		ImGui::Begin("Inspector");
+		auto iter = std::find_if(m_actors.begin(), m_actors.end(), [](auto& a) { return a->guiSelect; });
+		if(iter != m_actors.end()) {
+			(*iter)->ProcessGUI();
+		}
+		ImGui::End();
+	}
 }

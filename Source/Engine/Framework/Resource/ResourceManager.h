@@ -1,10 +1,14 @@
 #pragma once
-#include "Resource.h"
-#include "Core/Logger.h"
+
 #include "Framework/Singleton.h"
-#include <map>
+
 #include <memory>
 #include <string>
+#include <vector>
+#include <map>
+
+#include "Core/Logger.h"
+#include "Resource.h"
 
 #define GET_RESOURCE(type, filename, ...) nc::ResourceManager::Instance().Get<type>(filename, __VA_ARGS__)
 
@@ -15,12 +19,15 @@ namespace nc
 	// if the resource isn't in thre map, it is loaded/created and placed in the map
 	class ResourceManager : public Singleton<ResourceManager>
 	{
-	public:
-		template<typename T, typename ... TArgs>
-		res_t<T> Get(const std::string& filename, TArgs ... args);
+		public:
+			template<typename T, typename ... TArgs>
+			res_t<T> Get(const std::string& filename, TArgs ... args);
 
-	private:
-		std::map<std::string, res_t<Resource>> m_resources;
+			template<typename T>
+			std::vector<res_t<T>> GetAllOfType();
+
+		private:
+			std::map<std::string, res_t<Resource>> m_resources;
 	};
 
 	template<typename T, typename ...TArgs>
@@ -45,5 +52,19 @@ namespace nc
 		// add resource to resource map, return resource
 		m_resources[filename] = resource;
 		return resource;
+	}
+
+	template<typename T>
+	inline std::vector<res_t<T>> ResourceManager::GetAllOfType() {
+		std::vector<res_t<T>> result;
+
+		for(auto resource : m_resources) {
+			auto res = std::dynamic_pointer_cast<T>(resource.second);
+			if(res != nullptr) {
+				result.push_back(res);
+			}
+		}
+
+		return result;
 	}
 }
