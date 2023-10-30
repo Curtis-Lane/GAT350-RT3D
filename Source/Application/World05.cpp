@@ -11,19 +11,6 @@ namespace nc {
 		m_scene->Load("Scenes/scene.json");
 		m_scene->Initialize();
 
-		{
-			auto actor = CREATE_CLASS(Actor);
-			actor->name = "camera1";
-			actor->transform.position = glm::vec3(0, 0, 3);
-			actor->transform.rotation = glm::radians(glm::vec3(0, 180, 0));
-
-			auto cameraComponent = CREATE_CLASS(CameraComponent);
-			cameraComponent->SetPerspective(70.0f, static_cast<float>(ENGINE.GetSystem<Renderer>()->GetWidth()) / ENGINE.GetSystem<Renderer>()->GetHeight(), 0.1f, 100.0f);
-			actor->AddComponent(std::move(cameraComponent));
-
-			m_scene->Add(std::move(actor));
-		}
-
 		return true;
 	}
 
@@ -69,8 +56,6 @@ namespace nc {
 		renderer.BeginFrame();
 
 		// render
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//this->model->Draw(GL_TRIANGLES);
 		m_scene->Draw(renderer);
 
 		ENGINE.GetSystem<Gui>()->Draw();

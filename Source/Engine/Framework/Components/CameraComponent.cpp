@@ -55,10 +55,9 @@ namespace nc {
 	}
 
 	void CameraComponent::Read(const json_t& value) {
-		// READ_DATA of fov, aspect, near and far values
 		READ_DATA(value, fov);
-		READ_DATA(value, aspect);
-		READ_DATA(value, near);
-		READ_DATA(value, far);
+		READ_NAME_DATA(value, "aspect_ratio", aspect);
+		READ_NAME_DATA(value, "near_clip", near);
+		READ_NAME_DATA(value, "far_clip", far);
 	}
 }

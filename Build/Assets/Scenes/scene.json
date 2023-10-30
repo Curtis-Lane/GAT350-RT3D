@@ -12,8 +12,8 @@
 			"components" : [
 				{
 					"type" : "ModelComponent",
-					"modelName" : "models/squirrel.glb",
-					"materialName" : "materials/squirrel.mtrl"
+					"modelName" : "models/cube.obj",
+					"materialName" : "materials/phong.mtrl"
 				}
 			]
 		},
@@ -35,6 +35,25 @@
 					"range" : 20,
 					"innerAngle" : 10,
 					"outerAngle" : 30
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "camera1",
+			"persistent" : true,
+			"transform" : {
+				"position" : [0, 0, 3],
+				"scale" : [1, 1, 1],
+				"rotation" : [0, 180, 0]
+			},
+			"components" : [
+				{
+					"type" : "CameraComponent",
+					"fov" : 70,
+					"aspect_ratio" : 1.778,
+					"near_clip" : 0.1,
+					"far_clip" : 100
 				}
 			]
 		}
