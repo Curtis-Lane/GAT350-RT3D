@@ -21,7 +21,7 @@ namespace nc {
 
 			friend class Renderer;
 
-		private:
+		protected:
 			GLuint texture = NULL;
 			GLenum target = GL_TEXTURE_2D;
 			glm::ivec2 size = glm::ivec2(0);

@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 #include "Program.h"
 #include "Texture.h"
+#include "Cubemap.h"
 
 namespace nc {
 	bool Material::Create(std::string filename, ...) {
@@ -22,28 +23,33 @@ namespace nc {
 
 		// read the textures
 		std::string albedoTextureName;
-		READ_NAME_DATA(document, "albedoTexture", albedoTextureName);
-		if(!albedoTextureName.empty()) {
+		if(READ_NAME_DATA(document, "albedoTexture", albedoTextureName)) {
 			params |= ALBEDO_TEXTURE_MASK;
 			this->albedoTexture = GET_RESOURCE(Texture, albedoTextureName);
 		}
 		std::string specularTextureName;
-		READ_NAME_DATA(document, "specularTexture", specularTextureName);
-		if(!specularTextureName.empty()) {
+		if(READ_NAME_DATA(document, "specularTexture", specularTextureName)) {
 			params |= SPECULAR_TEXTURE_MASK;
 			this->specularTexture = GET_RESOURCE(Texture, specularTextureName);
 		}
 		std::string emissiveTextureName;
-		READ_NAME_DATA(document, "emissiveTexture", emissiveTextureName);
-		if(!emissiveTextureName.empty()) {
+		if(READ_NAME_DATA(document, "emissiveTexture", emissiveTextureName)) {
 			params |= EMISSIVE_TEXTURE_MASK;
 			this->emissiveTexture = GET_RESOURCE(Texture, emissiveTextureName);
 		}
 		std::string normalTextureName;
-		READ_NAME_DATA(document, "normalTexture", normalTextureName);
-		if(!normalTextureName.empty()) {
+		if(READ_NAME_DATA(document, "normalTexture", normalTextureName)) {
 			params |= NORMAL_TEXTURE_MASK;
 			this->normalTexture = GET_RESOURCE(Texture, normalTextureName);
+		}
+
+		std::string cubemapName;
+		if(READ_NAME_DATA(document, "cubemap", cubemapName)) {
+			params |= CUBEMAP_TEXTURE_MASK;
+			std::vector<std::string> cubemaps;
+			READ_DATA(document, cubemaps);
+
+			this->cubemapTexture = GET_RESOURCE(Cubemap, cubemapName, cubemaps);
 		}
 
 		READ_DATA(document, albedo);
