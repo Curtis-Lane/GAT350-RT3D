@@ -7,9 +7,8 @@
 
 namespace nc {
 	bool World04::Initialize() {
-		auto material = GET_RESOURCE(Material, "Materials/squirrel.mtrl");
+		this->material = GET_RESOURCE(Material, "Materials/squirrel.mtrl");
 		this->model = std::make_shared<Model>();
-		this->model->SetMaterial(material);
 		//this->model->Load("Models/plane.obj", glm::vec3(0, -1, 0));
 		//this->model->Load("Models/plane.obj", glm::vec3(0), glm::vec3(90, 0, 0));
 		//this->model->Load("Models/buddha.obj", glm::vec3(0), glm::vec3(-90, 0, 0));
@@ -51,9 +50,8 @@ namespace nc {
 
 		//this->time += deltaTime;
 
-		auto material = this->model->GetMaterial();
-		material->ProcessGUI();
-		material->Bind();
+		this->material->ProcessGUI();
+		this->material->Bind();
 
 		ImGui::Begin("Scene");
 		ImGui::ColorEdit3("Ambient Color", glm::value_ptr(this->ambientLightColor));
@@ -131,6 +129,7 @@ namespace nc {
 
 		// render
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		this->material->Bind();
 		this->model->Draw(GL_TRIANGLES);
 
 		ENGINE.GetSystem<Gui>()->Draw();

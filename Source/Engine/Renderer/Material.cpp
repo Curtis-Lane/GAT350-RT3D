@@ -90,6 +90,10 @@ namespace nc {
 			emissiveTexture->SetActive(GL_TEXTURE3);
 			emissiveTexture->Bind();
 		}
+		if(cubemapTexture != nullptr) {
+			cubemapTexture->SetActive(GL_TEXTURE4);
+			cubemapTexture->Bind();
+		}
 	}
 
 	void Material::ProcessGUI() {

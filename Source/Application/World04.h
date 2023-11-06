@@ -40,5 +40,6 @@ namespace nc {
 			Transform transform;
 
 			res_t<Model> model;
+			res_t<Material> material;
 	};
 }

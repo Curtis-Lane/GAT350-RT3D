@@ -29,6 +29,8 @@ namespace nc
 	{
 		// save previous keyboard state
 		m_prevKeyboardState = m_keyboardState;
+		// save previous mouse position
+		m_prevMousePosition = m_mousePosition;
 
 		// get sdl keyboard state
 		const uint8_t* keyboardState = SDL_GetKeyboardState(nullptr);
@@ -37,7 +39,7 @@ namespace nc
 
 		int x, y;
 		uint32_t buttons = SDL_GetMouseState(&x, &y);
-		m_mousePosition = Vector2{ x , y };
+		m_mousePosition = glm::vec2(x , y);
 
 		m_prevMouseButtonState = m_mouseButtonState;
 		m_mouseButtonState[0] = buttons & SDL_BUTTON_LMASK; // buttons [0001] & [0RML]

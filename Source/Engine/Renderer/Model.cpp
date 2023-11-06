@@ -35,8 +35,6 @@ namespace nc {
 	}
 
 	void Model::Draw(GLenum primitive) {
-		//bind material
-		this->material->Bind();
 		//draw the vertex buffer passing in the primitive
 		this->vertexBuffer->Draw(primitive);
 	}

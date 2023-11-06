@@ -107,6 +107,11 @@
 					"aspect_ratio" : 1.778,
 					"near_clip" : 0.1,
 					"far_clip" : 100
+				},
+				{
+					"type" : "CameraController",
+					"speed" : 2.5,
+					"sensitivity" : 0.25
 				}
 			]
 		}
