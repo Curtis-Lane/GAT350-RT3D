@@ -20,6 +20,7 @@ namespace nc {
 			void Bind() {glBindTexture(this->target, this->texture);}
 
 			friend class Renderer;
+			friend class Framebuffer;
 
 		protected:
 			GLuint texture = NULL;

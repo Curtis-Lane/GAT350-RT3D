@@ -1,4 +1,5 @@
 #include "LightComponent.h"
+
 #include "Framework/Actor.h"
 
 namespace nc {
@@ -42,11 +43,11 @@ namespace nc {
 		std::string lightType = "";
 		READ_DATA(value, lightType);
 		// I wanted to use a dang switch here but apparently c++ doesn't allow strings in switch statements
-		if(lightType == "Point") {
+		if(StringUtils::IsEqualIgnoreCase(lightType, "point")) {
 			this->type = lightType::Point;
-		} else if(lightType == "Directional") {
+		} else if(StringUtils::IsEqualIgnoreCase(lightType, "directional")) {
 			this->type = lightType::Directional;
-		} else if(lightType == "Spot") {
+		} else if(StringUtils::IsEqualIgnoreCase(lightType, "spot")) {
 			this->type = lightType::Spot;
 		}
 

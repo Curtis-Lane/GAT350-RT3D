@@ -1,4 +1,4 @@
-#include "World05.h"
+#include "World06.h"
 
 #include <glm/glm/gtx/color_space.hpp>
 
@@ -6,7 +6,7 @@
 #include "Input/InputSystem.h"
 
 namespace nc {
-	bool World05::Initialize() {
+	bool World06::Initialize() {
 		m_scene = std::make_unique<Scene>();
 		m_scene->Load("Scenes/scene.json");
 		m_scene->Initialize();
@@ -23,10 +23,10 @@ namespace nc {
 		return true;
 	}
 
-	void World05::Shutdown() {
+	void World06::Shutdown() {
 	}
 
-	void World05::Update(float deltaTime) {
+	void World06::Update(float deltaTime) {
 		ENGINE.GetSystem<Gui>()->BeginFrame();
 
 		m_scene->Update(deltaTime);
@@ -56,7 +56,7 @@ namespace nc {
 		ENGINE.GetSystem<Gui>()->EndFrame();
 	}
 
-	void World05::Draw(Renderer& renderer) {
+	void World06::Draw(Renderer& renderer) {
 		// pre-render
 		renderer.BeginFrame();
 
