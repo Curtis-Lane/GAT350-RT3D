@@ -7,10 +7,12 @@
 #include <vector>
 #include <map>
 
+#include "Core/StringUtils.h"
 #include "Core/Logger.h"
 #include "Resource.h"
 
-#define GET_RESOURCE(type, filename, ...) nc::ResourceManager::Instance().Get<type>(filename, __VA_ARGS__)
+#define GET_RESOURCE(type, filename, ...)  nc::ResourceManager::Instance().Get<type>(filename, __VA_ARGS__)
+#define ADD_RESOURCE(type, name, resource) nc::ResourceManager::Instance().Add<type>(name, resource)
 
 namespace nc
 {
@@ -20,6 +22,9 @@ namespace nc
 	class ResourceManager : public Singleton<ResourceManager>
 	{
 		public:
+			template<typename T>
+			bool Add(const std::string& name, res_t<T> resource);
+
 			template<typename T, typename ... TArgs>
 			res_t<T> Get(const std::string& filename, TArgs ... args);
 
@@ -29,6 +34,18 @@ namespace nc
 		private:
 			std::map<std::string, res_t<Resource>> m_resources;
 	};
+
+	template<typename T>
+	inline bool ResourceManager::Add(const std::string& name, res_t<T> resource) {
+		if(m_resources.find(name) != m_resources.end()) {
+			WARNING_LOG("Resource already exits: " << name);
+			return false;
+		}
+
+		m_resources[name] = resource;
+
+		return true;
+	}
 
 	template<typename T, typename ...TArgs>
 	inline res_t<T> ResourceManager::Get(const std::string& filename, TArgs ...args)
@@ -50,7 +67,8 @@ namespace nc
 		}
 
 		// add resource to resource map, return resource
-		m_resources[filename] = resource;
+		Add(filename, resource);
+
 		return resource;
 	}
 

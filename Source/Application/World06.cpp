@@ -8,16 +8,20 @@
 namespace nc {
 	bool World06::Initialize() {
 		m_scene = std::make_unique<Scene>();
-		m_scene->Load("Scenes/scene.json");
+		m_scene->Load("Scenes/scene_framebuffer.json");
 		m_scene->Initialize();
 
-		for(int i = 0; i < 10; i++) {
-			auto actor = CREATE_CLASS_BASE(Actor, "tree");
-			actor->name = StringUtils::CreateUnique("tree");
-			actor->transform.position = glm::vec3(randomf(-10, 10), 0, randomf(-10, 10));
-			actor->transform.scale = glm::vec3(randomf(0.5f, 3.0f), randomf(0.5f, 3.0f), 0);
-			actor->Initialize();
-			m_scene->Add(std::move(actor));
+		auto texture = std::make_shared<Texture>();
+		texture->CreateTexture(512, 512);
+		ADD_RESOURCE(Texture, "fb_texture", texture);
+
+		auto framebuffer = std::make_shared<Framebuffer>();
+		framebuffer->CreateFramebuffer(texture);
+		ADD_RESOURCE(Framebuffer, "fb", framebuffer);
+
+		auto material = GET_RESOURCE(Material, "materials/framebuffer.mtrl");
+		if(material != nullptr) {
+			material->albedoTexture = texture;
 		}
 
 		return true;
@@ -32,40 +36,33 @@ namespace nc {
 		m_scene->Update(deltaTime);
 		m_scene->ProcessGUI();
 
-		auto actor = m_scene->GetActorByName<Actor>("actor1");
-
-		auto material = actor->GetComponent<ModelComponent>()->material;
-		material->ProcessGUI();
-		material->Bind();
-
-		material = GET_RESOURCE(Material, "Materials/refraction.mtrl");
-		if(material != nullptr) {
-			ImGui::Begin("Refraction");
-
-			ImGui::DragFloat("IOR", &(this->refraction), 0.01f, 1, 3);
-			auto program = material->GetProgram();
-			program->Use();
-			program->SetUniform("ior", this->refraction);
-
-			ImGui::End();
-		}
-
-		// Lights
-		material->GetProgram()->SetUniform("ambientLight", this->ambientLightColor);
-
 		ENGINE.GetSystem<Gui>()->EndFrame();
 	}
 
 	void World06::Draw(Renderer& renderer) {
-		// pre-render
-		renderer.BeginFrame();
+		// ** PASS 1 **
+		m_scene->GetActorByName("cube")->active = false;
 
-		// render
+		auto framebuffer = GET_RESOURCE(Framebuffer, "fb");
+		renderer.SetViewport(framebuffer->GetSize().x, framebuffer->GetSize().y);
+		framebuffer->Bind();
+
+		renderer.BeginFrame(glm::vec3(0, 0, 1));
 		m_scene->Draw(renderer);
 
-		ENGINE.GetSystem<Gui>()->Draw();
+		framebuffer->Unbind();
+
+		// ** PASS 2 **
+		m_scene->GetActorByName("cube")->active = true;
+
+		renderer.ResetViewport();
+		renderer.BeginFrame();
+		m_scene->Draw(renderer);
+
+		//
 
 		// post-render
+		ENGINE.GetSystem<Gui>()->Draw();
 		renderer.EndFrame();
 	}
 }

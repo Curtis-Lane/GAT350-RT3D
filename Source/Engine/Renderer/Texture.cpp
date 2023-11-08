@@ -25,6 +25,36 @@ namespace nc {
 		return Load(filename, renderer);
 	}
 
+	bool Texture::CreateTexture(int width, int height) {
+		this->target = GL_TEXTURE_2D;
+		this->size = glm::vec2(width, height);
+
+		glGenTextures(1, &(this->texture));
+		glBindTexture(this->target, this->texture);
+
+		// create texture (width, height)
+		glTexImage2D(this->target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+		// set texture parameters
+		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		return true;
+	}
+
+	bool Texture::CreateDepthTexture(int width, int height) {
+		this->target = GL_TEXTURE_2D;
+		this->size = glm::vec2(width, height);
+
+		glGenTextures(1, &(this->texture));
+		glBindTexture(this->target, this->texture);
+
+		// create texture (width, height)
+		glTexImage2D(this->target, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		return true;
+	}
+
 	bool Texture::Load(const std::string& filename, Renderer& renderer) {
 		int channels = 0;
 
