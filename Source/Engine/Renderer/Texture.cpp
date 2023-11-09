@@ -25,7 +25,7 @@ namespace nc {
 		return Load(filename, renderer);
 	}
 
-	bool Texture::CreateTexture(int width, int height) {
+	bool Texture::CreateTexture(int width, int height, GLuint filteringMode) {
 		this->target = GL_TEXTURE_2D;
 		this->size = glm::vec2(width, height);
 
@@ -36,8 +36,8 @@ namespace nc {
 		glTexImage2D(this->target, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 		// set texture parameters
-		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, filteringMode);
+		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, filteringMode);
 
 		return true;
 	}

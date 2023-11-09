@@ -26,7 +26,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-1.5, 0, 1],
+				"position" : [0, 0, 1],
 				"scale" : [1, 1, 1],
 				"rotation" : [0, 0, 0]
 			},
@@ -44,18 +44,13 @@
 		},
 		{
 			"type" : "Actor",
-			"name" : "cube",
+			"name" : "post_process",
 			"persistent" : true,
-			"transform" : {
-				"position" : [0, 0, 1],
-				"scale" : [1, 1, 1],
-				"rotation" : [0, 0, 0]
-			},
 			"components" : [
 				{
 					"type" : "ModelComponent",
-					"modelName" : "models/cube.obj",
-					"materialName" : "materials/framebuffer.mtrl"
+					"modelName" : "models/quad.obj",
+					"materialName" : "materials/post_process.mtrl"
 				}
 			]
 		},
