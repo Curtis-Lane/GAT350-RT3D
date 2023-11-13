@@ -47,30 +47,31 @@ namespace nc {
 				if(effect) {
 					this->params |= INVERT_MASK;
 				} else {
-					this->params ^= INVERT_MASK;
+					this->params &= ~INVERT_MASK;
 				}
 			}
 			effect = this->params & GRAYSCALE_MASK;
 			if(ImGui::Checkbox("Grayscale", &effect)) {
-				if(effect) {
-					this->params |= GRAYSCALE_MASK;
-				} else {
-					this->params ^= GRAYSCALE_MASK;
-				}
+				this->params ^= GRAYSCALE_MASK;
 			}
 			effect = this->params & COLORTINT_MASK;
-			if(ImGui::Checkbox("Colortint", &effect)) {
-				if(effect) {
-					this->params |= COLORTINT_MASK;
-				} else {
-					this->params ^= COLORTINT_MASK;
-				}
+			if(ImGui::Checkbox("Color Tint", &effect)) {
+				this->params ^= COLORTINT_MASK;
 			}
-			ImGui::ColorEdit3("Colortint Value", glm::value_ptr(this->colorTint));
+			ImGui::ColorEdit3("Tint", glm::value_ptr(this->colorTint));
+			effect = this->params & SCANLINE_MASK;
+			if(ImGui::Checkbox("Scanlines", &effect)) {
+				this->params ^= SCANLINE_MASK;
+			}
+			effect = this->params & GRAIN_MASK;
+			if(ImGui::Checkbox("Grain", &effect)) {
+				this->params ^= GRAIN_MASK;
+			}
 			ImGui::End();
 
 			program->SetUniform("blend", this->blend);
 			program->SetUniform("params", this->params);
+			program->SetUniform("tint", this->colorTint);
 		}
 
 		ENGINE.GetSystem<Gui>()->EndFrame();

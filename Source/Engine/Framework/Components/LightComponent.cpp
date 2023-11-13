@@ -43,11 +43,11 @@ namespace nc {
 		std::string lightType = "";
 		READ_DATA(value, lightType);
 		// I wanted to use a dang switch here but apparently c++ doesn't allow strings in switch statements
-		if(StringUtils::IsEqualIgnoreCase(lightType, "point")) {
+		if(StringUtils::IsEqualIgnoreCase(lightType, "Point")) {
 			this->type = lightType::Point;
-		} else if(StringUtils::IsEqualIgnoreCase(lightType, "directional")) {
+		} else if(StringUtils::IsEqualIgnoreCase(lightType, "Directional")) {
 			this->type = lightType::Directional;
-		} else if(StringUtils::IsEqualIgnoreCase(lightType, "spot")) {
+		} else if(StringUtils::IsEqualIgnoreCase(lightType, "Spot")) {
 			this->type = lightType::Spot;
 		}
 
