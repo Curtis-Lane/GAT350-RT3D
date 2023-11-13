@@ -5,6 +5,7 @@
 #define COLORTINT_MASK  4
 #define SCANLINE_MASK   8
 #define GRAIN_MASK     16
+#define AAAAAAMASK     32
 
 in layout(location = 0) vec2 texcoord;
 
@@ -25,7 +26,7 @@ vec4 grayscale(in vec4 color) {
 }
 
 vec4 colortint(in vec4 color) {
-	return vec4(vec3(color) * tint, color.a); // Might be wrong
+	return vec4(vec3(color) * tint, color.a);
 }
 
 vec4 scanline(in vec4 color) {
@@ -63,6 +64,9 @@ void main() {
 	if(bool(params & GRAIN_MASK)) {
 		post_process = grain(post_process);
 	}
+	//if(bool(params & AAAAAAMASK)) {
+	//	post_process = grain(post_process);
+	//}
 
 	ocolor = mix(basecolor, post_process, blend);
 }

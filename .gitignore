@@ -12,6 +12,7 @@
 
 # Anti-copyright measures
 cliff_*.bmp
+Fantasy/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
