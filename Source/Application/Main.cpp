@@ -2,7 +2,7 @@
 #include "Framework/Framework.h"
 #include "Renderer/Renderer.h"
 
-#include "World06.h"
+#include "World07.h"
 
 int main(int argc, char* argv[])
 {
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
 	ENGINE.Initialize();
 
-	auto world = std::make_unique<nc::World06>();
+	auto world = std::make_unique<nc::World07>();
 	world->Initialize();
 
 	// main loop
