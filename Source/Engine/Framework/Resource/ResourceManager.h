@@ -12,13 +12,14 @@
 #include "Resource.h"
 
 #define GET_RESOURCE(type, filename, ...)  nc::ResourceManager::Instance().Get<type>(filename, __VA_ARGS__)
+#define GET_RESOURCES(type)                nc::ResourceManager::Instance().GetAllOfType<type>()
 #define ADD_RESOURCE(type, name, resource) nc::ResourceManager::Instance().Add<type>(name, resource)
 
 namespace nc
 {
 	// ResourceManager - Stores all currently loaded resources in a map
 	// uses string (filename) as the key and a res_t (shared pointer) to the resource data
-	// if the resource isn't in thre map, it is loaded/created and placed in the map
+	// if the resource isn't in the map, it is loaded/created and placed in the map
 	class ResourceManager : public Singleton<ResourceManager>
 	{
 		public:

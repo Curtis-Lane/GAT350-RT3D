@@ -12,14 +12,15 @@ namespace nc {
 		m_scene->Initialize();
 
 		auto texture = std::make_shared<Texture>();
-		texture->CreateTexture(1024, 1024);
-		ADD_RESOURCE(Texture, "fb_texture", texture);
+		texture->CreateDepthTexture(1024, 1024);
+		ADD_RESOURCE(Texture, "depth_texture", texture);
 
 		auto framebuffer = std::make_shared<Framebuffer>();
-		framebuffer->CreateFramebuffer(texture);
-		ADD_RESOURCE(Framebuffer, "fb", framebuffer);
+		framebuffer->CreateDepthbuffer(texture);
+		ADD_RESOURCE(Framebuffer, "depth_buffer", framebuffer);
 
-		auto material = GET_RESOURCE(Material, "Materials/post_process.mtrl");
+		// Set depth texture to debug sprite
+		auto material = GET_RESOURCE(Material, "Materials/sprite.mtrl");
 		if(material != nullptr) {
 			material->albedoTexture = texture;
 		}
@@ -36,68 +37,39 @@ namespace nc {
 		m_scene->Update(deltaTime);
 		m_scene->ProcessGUI();
 
-		/*auto program = GET_RESOURCE(Program, "Shaders/post_process.prog");
-		if(program != nullptr) {
-			program->Use();
-
-			ImGui::Begin("Post Processing");
-			ImGui::SliderFloat("Blend", &(this->blend), 0, 1);
-			bool effect = this->params & INVERT_MASK;
-			if(ImGui::Checkbox("Invert", &effect)) {
-				if(effect) {
-					this->params |= INVERT_MASK;
-				} else {
-					this->params &= ~INVERT_MASK;
-				}
-			}
-			effect = this->params & GRAYSCALE_MASK;
-			if(ImGui::Checkbox("Grayscale", &effect)) {
-				this->params ^= GRAYSCALE_MASK;
-			}
-			effect = this->params & COLORTINT_MASK;
-			if(ImGui::Checkbox("Color Tint", &effect)) {
-				this->params ^= COLORTINT_MASK;
-			}
-			ImGui::ColorEdit3("Tint", glm::value_ptr(this->colorTint));
-			effect = this->params & SCANLINE_MASK;
-			if(ImGui::Checkbox("Scanlines", &effect)) {
-				this->params ^= SCANLINE_MASK;
-			}
-			effect = this->params & GRAIN_MASK;
-			if(ImGui::Checkbox("Grain", &effect)) {
-				this->params ^= GRAIN_MASK;
-			}
-			ImGui::End();
-
-			program->SetUniform("blend", this->blend);
-			program->SetUniform("params", this->params);
-			program->SetUniform("tint", this->colorTint);
-		}*/
-
 		ENGINE.GetSystem<Gui>()->EndFrame();
 	}
 
 	void World07::Draw(Renderer& renderer) {
-		/*
 		// ** PASS 1 **
-		m_scene->GetActorByName("post_process")->active = false;
-
-		auto framebuffer = GET_RESOURCE(Framebuffer, "fb");
+		auto framebuffer = GET_RESOURCE(Framebuffer, "depth_buffer");
 		renderer.SetViewport(framebuffer->GetSize().x, framebuffer->GetSize().y);
 		framebuffer->Bind();
 
-		renderer.BeginFrame(glm::vec3(0, 0, 0));
-		m_scene->Draw(renderer);
+		renderer.ClearDepth();
+		auto program = GET_RESOURCE(Program, "shaders/shadow_depth.prog");
+		program->Use();
+		
+		auto lights = m_scene->GetComponents<LightComponent>();
+		for(auto light : lights) {
+			if(light->castShadows) {
+				glm::mat4 shadowMatrix = light->GetShadowMatrix();
+				program->SetUniform("shadowVP", shadowMatrix);
+			}
+		}
+
+		auto models = m_scene->GetComponents<ModelComponent>();
+		for(auto model : models) {
+			program->SetUniform("model", model->m_owner->transform.GetMatrix());
+			model->model->Draw();
+		}
 
 		framebuffer->Unbind();
-		*/
+		
 
 		// ** PASS 2 **
-		//m_scene->GetActorByName("post_process")->active = true;
-
 		renderer.ResetViewport();
 		renderer.BeginFrame();
-		//m_scene->GetActorByName("post_process")->Draw(renderer);
 		m_scene->Draw(renderer);
 
 		// post-render

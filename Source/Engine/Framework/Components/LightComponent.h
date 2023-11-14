@@ -15,6 +15,8 @@ namespace nc {
 
 			void ProcessGUI() override;
 
+			glm::mat4 GetShadowMatrix();
+
 		public:
 			enum lightType {
 				Point,
@@ -24,9 +26,13 @@ namespace nc {
 
 			lightType type = lightType::Point;
 			glm::vec3 color{1};
-			float intensity = 1;
-			float range = 20;
-			float innerAngle = 20;
-			float outerAngle = 30;
+			float intensity = 1.0f;
+			float range = 20.0f;
+			float innerAngle = 20.0f;
+			float outerAngle = 30.0f;
+
+			bool castShadows = false;
+			float shadowSize = 10.0f;
+			float shadowBias = 0.005f;
 	};
 }

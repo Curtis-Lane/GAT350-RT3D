@@ -21,6 +21,10 @@ namespace nc {
 		program->SetUniform(name + ".range", range);
 		program->SetUniform(name + ".innerAngle", glm::radians(innerAngle));
 		program->SetUniform(name + ".outerAngle", glm::radians(outerAngle));
+
+		if(castShadows) {
+			program->SetUniform("shadowVP", GetShadowMatrix());
+		}
 	}
 
 	void LightComponent::ProcessGUI() {
@@ -37,6 +41,18 @@ namespace nc {
 		if(type != Directional) {
 			ImGui::DragFloat("Range", &range, 0.1f, 0.1f, 50);
 		}
+
+		ImGui::Checkbox("Casts Shadows", &(this->castShadows));
+		if(this->castShadows) {
+			ImGui::DragFloat("Shadow Size", &(this->shadowSize), 0.1f, 1, 60);
+		}
+	}
+
+	glm::mat4 LightComponent::GetShadowMatrix() {
+		glm::mat4 projection = glm::ortho(-(this->shadowSize) * 0.5f, this->shadowSize * 0.5f, -(this->shadowSize) * 0.5f, this->shadowSize * 0.5f, 0.1f, 50.0f);
+		glm::mat4 view = glm::lookAt(m_owner->transform.position, m_owner->transform.position + m_owner->transform.Forward(), m_owner->transform.Up());
+
+		return projection * view;
 	}
 
 	void LightComponent::Read(const nc::json_t& value) {
@@ -56,5 +72,7 @@ namespace nc {
 		READ_DATA(value, range);
 		READ_DATA(value, innerAngle);
 		READ_DATA(value, outerAngle);
+
+		READ_DATA(value, castShadows);
 	}
 }

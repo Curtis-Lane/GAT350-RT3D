@@ -25,29 +25,16 @@ namespace nc
 
 	void Scene::Draw(Renderer& renderer) {
 		// get light components
-		std::vector<LightComponent*> lights;
-		for(auto& actor : m_actors) {
-			if(!actor->active) continue;
+		std::vector<LightComponent*> lights = GetComponents<LightComponent>();
 
-			auto component = actor->GetComponent<LightComponent>();
-			if(component != nullptr) {
-				lights.push_back(component);
-			}
-		}
+		// get camera components
+		std::vector<CameraComponent*> cameras = GetComponents<CameraComponent>();
 
-		// get camera component
-		CameraComponent* camera = nullptr;
-		for(auto& actor : m_actors) {
-			if(!actor->active) continue;
-
-			camera = actor->GetComponent<CameraComponent>();
-			if(camera != nullptr) {
-				break;
-			}
-		}
+		// get first active camera component
+		CameraComponent* camera = (!cameras.empty()) ? cameras[0] : nullptr;
 
 		// get all shader programs in the resource system
-		auto programs = ResourceManager::Instance().GetAllOfType<Program>();
+		auto programs = GET_RESOURCES(Program);
 		// set all shader programs camera and lights uniforms
 		for(auto& program : programs) {
 			program->Use();

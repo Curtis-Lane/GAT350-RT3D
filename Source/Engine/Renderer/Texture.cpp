@@ -42,7 +42,7 @@ namespace nc {
 		return true;
 	}
 
-	bool Texture::CreateDepthTexture(int width, int height) {
+	bool Texture::CreateDepthTexture(int width, int height, GLuint filteringMode) {
 		this->target = GL_TEXTURE_2D;
 		this->size = glm::vec2(width, height);
 
@@ -50,7 +50,13 @@ namespace nc {
 		glBindTexture(this->target, this->texture);
 
 		// create texture (width, height)
-		glTexImage2D(this->target, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexImage2D(this->target, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+		// set texture parameters
+		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, filteringMode);
+		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, filteringMode);
+		glTexParameteri(this->target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(this->target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		return true;
 	}

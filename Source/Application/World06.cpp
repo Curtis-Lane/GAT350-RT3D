@@ -67,6 +67,10 @@ namespace nc {
 			if(ImGui::Checkbox("Grain", &effect)) {
 				this->params ^= GRAIN_MASK;
 			}
+			effect = this->params & DEUTERANOPIA_MASK;
+			if(ImGui::Checkbox("Deuteranopia (Red-Green Colorblindness)", &effect)) {
+				this->params ^= DEUTERANOPIA_MASK;
+			}
 			ImGui::End();
 
 			program->SetUniform("blend", this->blend);

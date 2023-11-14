@@ -80,6 +80,24 @@
 		},
 		{
 			"type" : "Actor",
+			"name" : "depthDebug",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [2.5, 0.5, 1.25],
+				"scale" : [1, 1, 1],
+				"rotation" : [0, 0, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "models/quad.obj",
+					"materialName" : "materials/sprite.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
 			"name" : "post_process",
 			"persistent" : true,
 			"active" : false,
@@ -96,19 +114,20 @@
 			"name" : "light1",
 			"persistent" : true,
 			"transform" : {
-				"position" : [3, 3, 3],
+				"position" : [0, 3, 0],
 				"scale" : [1, 1, 1],
-				"rotation" : [0, 0, 0]
+				"rotation" : [90, 0, 0]
 			},
 			"components" : [
 				{
 					"type" : "LightComponent",
-					"lightType" : "Point",
+					"lightType" : "Directional",
 					"color" : [1, 1, 1],
 					"intensity" : 1,
 					"range" : 20,
 					"innerAngle" : 10,
-					"outerAngle" : 30
+					"outerAngle" : 30,
+					"castShadows" : true
 				}
 			]
 		},

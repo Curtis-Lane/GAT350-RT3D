@@ -14,7 +14,7 @@ namespace nc {
 			virtual bool Create(std::string filename, ...) override;
 
 			bool CreateTexture(int width, int height, GLuint filteringMode = GL_LINEAR);
-			bool CreateDepthTexture(int width, int height);
+			bool CreateDepthTexture(int width, int height, GLuint filteringMode = GL_NEAREST);
 
 			bool Load(const std::string& filename, class Renderer& renderer);
 			const glm::ivec2& GetSize() const {return this->size;}
