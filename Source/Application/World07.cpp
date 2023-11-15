@@ -25,6 +25,12 @@ namespace nc {
 			material->albedoTexture = texture;
 		}
 
+		//material = GET_RESOURCE(Material, "Fantasy/fantasy.mtrl");
+		auto materials = GET_RESOURCES(Material);
+		for(auto material : materials) {
+			material->depthTexture = texture;
+		}
+
 		return true;
 	}
 
@@ -60,8 +66,11 @@ namespace nc {
 
 		auto models = m_scene->GetComponents<ModelComponent>();
 		for(auto model : models) {
-			program->SetUniform("model", model->m_owner->transform.GetMatrix());
-			model->model->Draw();
+			if(model->castShadows) {
+				//glCullFace(GL_FRONT);
+				program->SetUniform("model", model->m_owner->transform.GetMatrix());
+				model->model->Draw();
+			}
 		}
 
 		framebuffer->Unbind();

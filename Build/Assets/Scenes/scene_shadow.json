@@ -38,7 +38,7 @@
 				},
 				{
 					"type" : "RotateComponent",
-					"rotation" : [0, 0, 0]
+					"rotation" : [0, 45, 0]
 				}
 			]
 		},
@@ -57,6 +57,10 @@
 					"type" : "ModelComponent",
 					"modelName" : "fantasy/obj/SF_Bld_WitchesHut_01.obj",
 					"materialName" : "fantasy/fantasy.mtrl"
+				},
+				{
+					"type" : "RotateComponent",
+					"rotation" : [0, 45, 0]
 				}
 			]
 		},
@@ -82,7 +86,7 @@
 			"type" : "Actor",
 			"name" : "depthDebug",
 			"persistent" : true,
-			"active" : true,
+			"active" : false,
 			"transform" : {
 				"position" : [2.5, 0.5, 1.25],
 				"scale" : [1, 1, 1],
@@ -111,12 +115,12 @@
 		},
 		{
 			"type" : "Actor",
-			"name" : "light1",
+			"name" : "light",
 			"persistent" : true,
 			"transform" : {
 				"position" : [0, 3, 0],
-				"scale" : [1, 1, 1],
-				"rotation" : [90, 0, 0]
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [60, 30, 0]
 			},
 			"components" : [
 				{
@@ -128,6 +132,11 @@
 					"innerAngle" : 10,
 					"outerAngle" : 30,
 					"castShadows" : true
+				},
+				{
+					"type" : "ModelComponent",
+					"modelName" : "models/quad.obj",
+					"materialName" : "materials/ui_light.mtrl"
 				}
 			]
 		},
