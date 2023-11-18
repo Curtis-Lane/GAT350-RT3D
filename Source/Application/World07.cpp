@@ -11,8 +11,9 @@ namespace nc {
 		m_scene->Load("Scenes/scene_shadow.json");
 		m_scene->Initialize();
 
+		int shadowRes = 8192;
 		auto texture = std::make_shared<Texture>();
-		texture->CreateDepthTexture(1024, 1024);
+		texture->CreateDepthTexture(shadowRes, shadowRes);
 		ADD_RESOURCE(Texture, "depth_texture", texture);
 
 		auto framebuffer = std::make_shared<Framebuffer>();

@@ -11,7 +11,8 @@
 
 in layout(location = 0) vec3 position;
 in layout(location = 1) vec2 texcoord;
-in layout(location = 2) mat3 tbn;
+in layout(location = 2) vec4 shadowcoord;
+in layout(location = 3) mat3 tbn;
 
 out layout(location = 0) vec4 ocolor;
 
@@ -19,6 +20,7 @@ layout(binding = 0) uniform sampler2D albedoTexture;
 layout(binding = 1) uniform sampler2D specularTexture;
 layout(binding = 2) uniform sampler2D normalTexture;
 layout(binding = 3) uniform sampler2D emissiveTexture;
+layout(binding = 5) uniform sampler2D shadowTexture; // Get the shadow texture for the scene
 
 uniform struct Material {
 	uint params;
@@ -45,6 +47,7 @@ uniform struct Light {
 
 uniform vec3 ambientLight;
 uniform int numLights = 3;
+uniform float shadowBias = 0.005; // Bring in the shadow bias value, setting a default to avoid z-fighting
 
 void phong(in Light light, in vec3 position, in vec3 normal, out vec3 diffuse, out vec3 specular) {
 	// Diffuse light calculations
@@ -91,6 +94,11 @@ float attenuation(in vec3 position1, in vec3 position2, in float range) {
 	return attenuation;
 }
 
+// Calculate whether or not this coordinate is in shadow, using the bias to avoid z-fighting
+float calculateShadow(in vec4 shadowcoord, in float bias) {
+	return texture(shadowTexture, shadowcoord.xy).x < shadowcoord.z - bias ? 0 : 1;
+}
+
 void main()
 {
 	vec4 albedoColor = bool(material.params & ALBEDO_TEXTURE_MASK) ? texture(albedoTexture, texcoord) : vec4(material.albedo, 1);
@@ -99,6 +107,9 @@ void main()
 
 	// Multiply texture color by ambient lighting
 	ocolor = vec4(ambientLight, 1) * albedoColor + emissiveColor;
+
+	// Determine whether or not we are in shadow
+	float shadow = calculateShadow(shadowcoord, shadowBias);
 
 	for(int i = 0; i < numLights; i++) {
 		vec3 diffuse;
@@ -111,6 +122,6 @@ void main()
 		normal = normalize(tbn * normal);
 
 		phong(lights[i], position, normal, diffuse, specular);
-		ocolor += ((vec4(diffuse, 1) * albedoColor) + (vec4(specular, 1)) * specularColor) * attenuation * lights[i].intensity;
+		ocolor += ((vec4(diffuse, 1) * albedoColor) + (vec4(specular, 1)) * specularColor) * attenuation * lights[i].intensity * shadow;
 	}
 }
