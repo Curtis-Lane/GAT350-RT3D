@@ -45,6 +45,7 @@ namespace nc
 			return false;
 		}
 
+		resource->name = lowerName;
 		m_resources[lowerName] = resource;
 
 		return true;

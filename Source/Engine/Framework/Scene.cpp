@@ -14,6 +14,7 @@ namespace nc
 
 	void Scene::Update(float dt)
 	{
+		this->deltaTime = dt;
 		// update and remove destroyed actors
 		auto iter = m_actors.begin();
 		while (iter != m_actors.end())
@@ -69,6 +70,17 @@ namespace nc
 		m_actors.push_back(std::move(actor));
 	}
 
+	void Scene::Remove(Actor* actor) {
+		auto iter = m_actors.begin();
+		while(iter != m_actors.end()) {
+			if((*iter).get() == actor) {
+				m_actors.erase(iter);
+				break;
+			}
+			iter++;
+		}
+	}
+
 	void Scene::RemoveAll(bool force)
 	{
 		auto iter = m_actors.begin();
@@ -119,25 +131,11 @@ namespace nc
 	}
 
 	void Scene::ProcessGUI() {
-		ImGui::Begin("Scene");
+		float fps = 1.0f / this->deltaTime;
+		float ms = 1000.0f * this->deltaTime;
+
+		ImVec4 color = (fps < 30) ? ImVec4(1, 0, 0, 1) : ImVec4(1, 1, 1 ,1);
+		ImGui::TextColored(color, "%.2f FPS (%.2f)", fps, ms);
 		ImGui::ColorEdit3("Ambient", glm::value_ptr(ambientColor));
-		ImGui::Separator();
-
-		for(auto& actor : m_actors) {
-			if(ImGui::Selectable(actor->name.c_str(), actor->guiSelect)) {
-				// Set all actors GUI to false
-				std::for_each(m_actors.begin(), m_actors.end(), [](auto& a) { a->guiSelect = false; });
-				// Set selected actor GUI to true
-				actor->guiSelect = true;
-			}
-		}
-		ImGui::End();
-
-		ImGui::Begin("Inspector");
-		auto iter = std::find_if(m_actors.begin(), m_actors.end(), [](auto& a) { return a->guiSelect; });
-		if(iter != m_actors.end()) {
-			(*iter)->ProcessGUI();
-		}
-		ImGui::End();
 	}
 }

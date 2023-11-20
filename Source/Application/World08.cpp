@@ -11,6 +11,8 @@ namespace nc {
 		m_scene->Load("Scenes/scene_cel.json");
 		m_scene->Initialize();
 
+		m_editor = std::make_unique<Editor>();
+
 		int shadowRes = 8192;
 		auto texture = std::make_shared<Texture>();
 		texture->CreateDepthTexture(shadowRes, shadowRes);
@@ -42,7 +44,7 @@ namespace nc {
 		ENGINE.GetSystem<Gui>()->BeginFrame();
 
 		m_scene->Update(deltaTime);
-		m_scene->ProcessGUI();
+		m_editor->ProcessGUI(m_scene.get());
 
 		auto program = GET_RESOURCE(Program, "Shaders/lit_phong_cel.prog"); // Find if any objects are using the cel shader
 		if(program != nullptr) { // If yes, create an ImGui window to handle their parameters
