@@ -55,8 +55,12 @@ namespace nc {
 		// set texture parameters
 		glTexParameteri(this->target, GL_TEXTURE_MIN_FILTER, filteringMode);
 		glTexParameteri(this->target, GL_TEXTURE_MAG_FILTER, filteringMode);
+
 		glTexParameteri(this->target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(this->target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		GLfloat border[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		glTexParameterfv(this->target, GL_TEXTURE_BORDER_COLOR, border);
 
 		return true;
 	}
