@@ -8,6 +8,7 @@
 namespace nc {
 	bool World08::Initialize() {
 		m_scene = std::make_unique<Scene>();
+		m_scene->Load("Scenes/scene_editor.json");
 		m_scene->Load("Scenes/scene_cel.json");
 		m_scene->Initialize();
 
@@ -44,6 +45,7 @@ namespace nc {
 		ENGINE.GetSystem<Gui>()->BeginFrame();
 
 		m_scene->Update(deltaTime);
+		m_editor->Update();
 		m_editor->ProcessGUI(m_scene.get());
 
 		auto program = GET_RESOURCE(Program, "Shaders/lit_phong_cel.prog"); // Find if any objects are using the cel shader
