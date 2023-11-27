@@ -17,12 +17,47 @@ namespace nc {
 
 		// Show resources
 		ImGui::Begin("Resources");
-		auto resources = GET_RESOURCES(Resource);
-		for(auto& resource : resources) {
-			if(ImGui::Selectable(resource->name.c_str(), resource.get() == this->selectedObject)) {
-				this->selectedObject = resource.get();
+
+		// Textures
+		if(ImGui::CollapsingHeader("Textures")) {
+			auto resources = GET_RESOURCES(Texture);
+			for(auto& resource : resources) {
+				if(ImGui::Selectable(resource->name.c_str(), resource.get() == this->selectedObject)) {
+					this->selectedObject = resource.get();
+				}
 			}
 		}
+
+		// Models
+		if(ImGui::CollapsingHeader("Models")) {
+			auto resources = GET_RESOURCES(Model);
+			for(auto& resource : resources) {
+				if(ImGui::Selectable(resource->name.c_str(), resource.get() == this->selectedObject)) {
+					this->selectedObject = resource.get();
+				}
+			}
+		}
+
+		// Materials
+		if(ImGui::CollapsingHeader("Materials")) {
+			auto resources = GET_RESOURCES(Material);
+			for(auto& resource : resources) {
+				if(ImGui::Selectable(resource->name.c_str(), resource.get() == this->selectedObject)) {
+					this->selectedObject = resource.get();
+				}
+			}
+		}
+
+		// Shaders
+		if(ImGui::CollapsingHeader("Shaders")) {
+			auto resources = GET_RESOURCES(Shader);
+			for(auto& resource : resources) {
+				if(ImGui::Selectable(resource->name.c_str(), resource.get() == this->selectedObject)) {
+					this->selectedObject = resource.get();
+				}
+			}
+		}
+
 		ImGui::End();
 
 		// Show scene
