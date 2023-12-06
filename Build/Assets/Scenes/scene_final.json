@@ -27,7 +27,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, -1.3, 3],
+				"position" : [-3.5, -1.3, 3],
 				"scale" : [0.1, 0.1, 0.1],
 				"rotation" : [0, 90, 0]
 			},
@@ -45,7 +45,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, -1.3, 1],
+				"position" : [-3.5, -1.3, 1],
 				"scale" : [0.1, 0.1, 0.1],
 				"rotation" : [0, 90, 0]
 			},
@@ -63,7 +63,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, -1.3, -1.6],
+				"position" : [-3.5, -1.3, -1.6],
 				"scale" : [0.1, 0.1, 0.1],
 				"rotation" : [0, 90, 0]
 			},
@@ -81,7 +81,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, -1.3, -3.5],
+				"position" : [-3.5, -1.3, -3.5],
 				"scale" : [0.1, 0.1, 0.1],
 				"rotation" : [0, 90, 0]
 			},
@@ -99,9 +99,99 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, -1.3, -6.7],
+				"position" : [-3.5, -1.3, -6.7],
 				"scale" : [0.1, 0.1, 0.1],
 				"rotation" : [0, 90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
+					"materialName" : "fantasy/fantasy.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "house06",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.5, -1.3, -6.7],
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
+					"materialName" : "fantasy/fantasy.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "house07",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.5, -1.3, -3.5],
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
+					"materialName" : "fantasy/fantasy.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "house08",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.5, -1.3, -1.6],
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
+					"materialName" : "fantasy/fantasy.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "house09",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.5, -1.3, 1],
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
+					"materialName" : "fantasy/fantasy.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "house10",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.5, -1.3, 3],
+				"scale" : [0.1, 0.1, 0.1],
+				"rotation" : [0, -90, 0]
 			},
 			"components" : [
 				{
@@ -126,20 +216,16 @@
 					"type" : "ModelComponent",
 					"modelName" : "fantasy/obj/SF_Bld_WitchesHut_01.obj",
 					"materialName" : "fantasy/fantasy.mtrl"
-				},
-				{
-					"type" : "RotateComponent",
-					"rotation" : [0, 0, 0]
 				}
 			]
 		},
 		{
 			"type" : "Actor",
-			"name" : "ogre",
+			"name" : "ogre01",
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-3, 0, -5.1],
+				"position" : [-3.5, 0, -5.1],
 				"scale" : [1, 1, 1],
 				"rotation" : [0, 90, 0]
 			},
@@ -153,11 +239,29 @@
 		},
 		{
 			"type" : "Actor",
-			"name" : "squirrel",
+			"name" : "ogre02",
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [-2.5, -1, -0.3],
+				"position" : [3.5, 0, -5.1],
+				"scale" : [1, 1, 1],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
+				{
+					"type" : "ModelComponent",
+					"modelName" : "models/ogre.obj",
+					"materialName" : "materials/ogre.mtrl"
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "squirrel01",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [-3.1, -1, -0.3],
 				"scale" : [0.2, 0.2, 0.2],
 				"rotation" : [0, 90, 0]
 			},
@@ -166,10 +270,24 @@
 					"type" : "ModelComponent",
 					"modelName" : "models/squirrel.glb",
 					"materialName" : "materials/squirrel_cel.mtrl"
-				},
+				}
+			]
+		},
+		{
+			"type" : "Actor",
+			"name" : "squirrel02",
+			"persistent" : true,
+			"active" : true,
+			"transform" : {
+				"position" : [3.1, -1, -0.3],
+				"scale" : [0.2, 0.2, 0.2],
+				"rotation" : [0, -90, 0]
+			},
+			"components" : [
 				{
-					"type" : "RotateComponent",
-					"rotation" : [0, 0, 0]
+					"type" : "ModelComponent",
+					"modelName" : "models/squirrel.glb",
+					"materialName" : "materials/squirrel_cel.mtrl"
 				}
 			]
 		},
@@ -213,7 +331,7 @@
 			"type" : "Actor",
 			"name" : "ground03",
 			"persistent" : true,
-			"active" : true,
+			"active" : false,
 			"transform" : {
 				"position" : [5, -1, 5],
 				"scale" : [1, 1, 1],
@@ -231,7 +349,7 @@
 			"type" : "Actor",
 			"name" : "ground04",
 			"persistent" : true,
-			"active" : true,
+			"active" : false,
 			"transform" : {
 				"position" : [5, -1, -5],
 				"scale" : [1, 1, 1],
@@ -251,7 +369,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [0.5, -1, 0.75],
+				"position" : [0, -1, 0.75],
 				"scale" : [0.85, 1, 0.85],
 				"rotation" : [0, 90, 0]
 			},
@@ -269,7 +387,7 @@
 			"persistent" : true,
 			"active" : true,
 			"transform" : {
-				"position" : [0.5, -1, -7.75],
+				"position" : [0, -1, -7.75],
 				"scale" : [0.85, 1, 0.85],
 				"rotation" : [0, 90, 0]
 			},
@@ -294,7 +412,7 @@
 				{
 					"type" : "LightComponent",
 					"lightType" : "Directional",
-					"color" : [1, 1, 1],
+					"color" : [1, 0.855, 0.666],
 					"intensity" : 0.8,
 					"range" : 20,
 					"innerAngle" : 10,

@@ -59,3 +59,4 @@ WARNING: Program.cpp(165) Could not find uniform location: material.params
 WARNING: Program.cpp(165) Could not find uniform location: material.specular
 WARNING: Program.cpp(165) Could not find uniform location: material.emissive
 WARNING: Program.cpp(165) Could not find uniform location: material.shininess
+ASSERT: Renderer.cpp(177) OPENGL Source: OpenGL Type: Error(1282) | Error has been generated. GL error GL_INVALID_OPERATION in (null): (ID: 1710494744) texture 1, "" is already bound to another target
