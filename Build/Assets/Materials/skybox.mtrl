@@ -1,12 +1,12 @@
 {
 	"program" : "Shaders/skybox.prog",
-	"cubemap" : "night_cubemap",
-	"cubemaps" : [
-		"Textures/hl_cliff_cubemap/cliff_rt.bmp",
-		"Textures/hl_cliff_cubemap/cliff_lf.bmp",
-		"Textures/hl_cliff_cubemap/cliff_up.bmp",
-		"Textures/hl_cliff_cubemap/cliff_dn.bmp",
-		"Textures/hl_cliff_cubemap/cliff_bk.bmp",
-		"Textures/hl_cliff_cubemap/cliff_ft.bmp"
+	"cubemap" : "forest_cubemap",
+	"cubemaps": [
+		"Textures/forest_cubemap/posx.jpg",
+		"Textures/forest_cubemap/negx.jpg",
+		"Textures/forest_cubemap/posy.jpg",
+		"Textures/forest_cubemap/negy.jpg",
+		"Textures/forest_cubemap/posz.jpg",
+		"Textures/forest_cubemap/negz.jpg"
 	]
 }

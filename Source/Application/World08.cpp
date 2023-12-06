@@ -9,7 +9,7 @@ namespace nc {
 	bool World08::Initialize() {
 		m_scene = std::make_unique<Scene>();
 		m_scene->Load("Scenes/scene_editor.json");
-		m_scene->Load("Scenes/scene_cel.json");
+		m_scene->Load("Scenes/scene_final.json");
 		m_scene->Initialize();
 
 		m_editor = std::make_unique<Editor>();

@@ -158,7 +158,7 @@
     <None Include="..\..\Build\Assets\Materials\ogre.mtrl">
       <Filter>Materials</Filter>
     </None>
-    <None Include="..\..\Build\Assets\Materials\skybox.mtrl">
+    <None Include="..\..\Build\Assets\Materials\cliff_skybox.mtrl">
       <Filter>Materials</Filter>
     </None>
     <None Include="..\..\Build\Assets\Shaders\skybox.prog">
@@ -274,6 +274,12 @@
     </None>
     <None Include="..\..\Build\Assets\Materials\basic.mtrl">
       <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\Build\Assets\Materials\skybox.mtrl">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\Build\Assets\Scenes\scene_final.json">
+      <Filter>Scenes</Filter>
     </None>
   </ItemGroup>
 </Project>
