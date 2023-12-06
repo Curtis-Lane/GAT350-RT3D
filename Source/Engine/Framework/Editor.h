@@ -10,5 +10,6 @@ namespace nc {
 		private:
 			bool active = true;
 			class Object* selectedObject = nullptr;
+			class Object* renameObject = nullptr;
 	};
 }

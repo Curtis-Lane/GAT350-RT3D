@@ -50,4 +50,48 @@ namespace nc {
 		// Return the input, combined with the counter to generate an always unique string
 		return input + std::to_string(stringCounter);
 	}
+
+	// Return the number at the end of a string "name43" -> 43, if there are no digits return -1
+	int StringUtils::GetTrailingNumber(const std::string& str) {
+		// If the string is empty return -1
+		if(str.empty()) {
+			return -1;
+		}
+
+		// Check from the end of the string for characters that are digits, add digit to strNumber
+		// If character is not digit, then exit
+		std::string strNumber;
+		for(size_t i = str.size() - 1; i >= 0; i--) {
+			if(std::isdigit(str[i])) {
+				strNumber = str[i] + strNumber;
+			} else {
+				break;
+			}
+		}
+
+		// Convert strNumber to a number if not empty
+		return (!strNumber.empty()) ? std::stoi(strNumber) : -1;
+	}
+
+	// Remove any digit characters from the end of the string "name43" -> "name"
+	std::string StringUtils::RemoveTrailingNumber(const std::string& str) {
+		if(str.empty()) {
+			return "";
+		}
+
+		// Set result string to str parameter
+		// Start at the end of the string and remove any characters that are digits
+		// If character is not a digit, then exit
+		std::string result = str;
+		for(size_t i = str.size(); i >= 0; i--) {
+			if(std::isdigit(str[i])) {
+				result.pop_back();
+			} else {
+				break;
+			}
+		}
+
+		// Return string without trailing number
+		return result;
+	}
 }

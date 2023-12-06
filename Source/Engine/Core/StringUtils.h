@@ -10,6 +10,9 @@ namespace nc {
 			static bool IsEqualIgnoreCase(std::string stringOne, std::string stringTwo);
 			static std::string CreateUnique(std::string input);
 
+			static int GetTrailingNumber(const std::string& str);
+			static std::string RemoveTrailingNumber(const std::string& str);
+
 		private:
 			static unsigned int stringCounter;
 	};

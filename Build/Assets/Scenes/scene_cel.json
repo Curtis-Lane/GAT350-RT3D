@@ -35,7 +35,7 @@
 				{
 					"type" : "ModelComponent",
 					"modelName" : "fantasy/obj/SF_Bld_Elven_House_01.obj",
-					"materialName" : "fantasy/fantasy_cel.mtrl"
+					"materialName" : "fantasy/fantasy.mtrl"
 				},
 				{
 					"type" : "RotateComponent",

@@ -15,6 +15,9 @@ namespace nc {
 			return;
 		}
 
+		// Set seperator widget to yellow to stand out
+		ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1, 1, 0, 1));
+
 		// Show resources
 		ImGui::Begin("Resources");
 
@@ -66,7 +69,72 @@ namespace nc {
 		ImGui::Separator();
 
 		// Show actors
-		ImGui::BeginChild("Actors");
+		int index = 0;
+		for(auto& actor : scene->m_actors) {
+			bool done = false;
+			ImGui::PushID(index++);
+
+			// Rename actor if renameObject is set to an actor
+			if(actor.get() == this->renameObject) {
+				// Set the keyboard to enter input to the InputText
+				if(ImGui::IsWindowFocused() && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0)) {
+					ImGui::SetKeyboardFocusHere(0);
+				}
+
+				// Create name from actor name, name string is mutable (can be changed)
+				char name[32];
+				strcpy_s(name, 32, actor->name.c_str());
+
+				// Get input and set new name after return is pressed, clear renameObject to nullptr when done
+				if(ImGui::InputText("", name, 32, ImGuiInputTextFlags_EnterReturnsTrue)) {
+					actor->name = name;
+					this->renameObject = nullptr;
+				}
+			} else if(ImGui::Selectable(actor->name.c_str(), actor.get() == this->selectedObject)) {
+				this->selectedObject = actor.get();
+			}
+
+			// Set rename when selected actor is double-clicked
+			if(actor.get() == this->selectedObject && ImGui::IsMouseDoubleClicked(0)) {
+				this->renameObject = actor.get();
+			}
+
+			// Show popup menu when actor is right clicked
+			if(ImGui::BeginPopupContextItem(actor->name.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+				if(ImGui::MenuItem("Duplicate")) {
+					// Get the raw pointer of the clone of the actor
+					auto newActor = dynamic_cast<Actor*>(actor->Clone().release());
+
+					// Check if there is a trailing number on the actor being cloned
+					int number = StringUtils::GetTrailingNumber(actor->name);
+
+					// Increment the number if a number existed else add "1" to the name
+					newActor->name = (number != -1) ? StringUtils::RemoveTrailingNumber(actor->name) + std::to_string(++number) : actor->name + "1";
+					this->selectedObject = newActor;
+
+					// Add new clone after the actor cloned
+					scene->Add(std::unique_ptr<Actor>(newActor), actor.get());
+
+					done = true;
+				}
+				if(ImGui::MenuItem("Delete")) {
+					// Remove actor
+					scene->Remove(actor.get());
+					this->selectedObject = nullptr;
+					done = true;
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::PopID();
+
+			// If done with right-click operation, exit showing actors
+			if(done) {
+				break;
+			}
+		}
+
+		// Actor creation
+		ImGui::BeginChild("ActorCreate");
 		// Actor controls
 		if(ImGui::BeginPopupContextWindow()) {
 			auto cameras = scene->GetComponents<CameraComponent>();
@@ -127,12 +195,6 @@ namespace nc {
 
 			ImGui::EndPopup();
 		}
-
-		for(auto& actor : scene->m_actors) {
-			if(ImGui::Selectable(actor->name.c_str(), actor.get() == this->selectedObject)) {
-				this->selectedObject = actor.get();
-			}
-		}
 		ImGui::EndChild();
 		ImGui::End();
 
@@ -149,6 +211,9 @@ namespace nc {
 				}
 			}
 		}
+
+		// Need to pop the style at the end
+		ImGui::PopStyleColor();
 
 		ImGui::End();
 	}

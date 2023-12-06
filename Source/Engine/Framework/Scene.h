@@ -17,7 +17,7 @@ namespace nc {
 			void Update(float dt);
 			void Draw(Renderer& renderer);
 
-			void Add(std::unique_ptr<Actor> actor);
+			void Add(std::unique_ptr<Actor> actor, Actor* prevActor = nullptr);
 			void Remove(Actor* actor);
 			void RemoveAll(bool force = false);
 
