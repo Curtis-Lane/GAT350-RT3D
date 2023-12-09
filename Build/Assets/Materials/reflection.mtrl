@@ -1,12 +1,12 @@
 {
 	"program" : "Shaders/reflection.prog",
-	"cubemap" : "night_cubemap",
+	"cubemap" : "forest_cubemap",
 	"cubemaps" : [
-		"Textures/night_cubemap/posx.jpg",
-		"Textures/night_cubemap/negx.jpg",
-		"Textures/night_cubemap/posy.jpg",
-		"Textures/night_cubemap/negy.jpg",
-		"Textures/night_cubemap/posz.jpg",
-		"Textures/night_cubemap/negz.jpg"
+		"Textures/forest_cubemap/posx.jpg",
+		"Textures/forest_cubemap/negx.jpg",
+		"Textures/forest_cubemap/posy.jpg",
+		"Textures/forest_cubemap/negy.jpg",
+		"Textures/forest_cubemap/posz.jpg",
+		"Textures/forest_cubemap/negz.jpg"
 	]
 }
